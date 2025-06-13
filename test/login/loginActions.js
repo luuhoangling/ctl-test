@@ -1,7 +1,5 @@
 const loginObjects = require('./loginObjects');
-const excelParse = require('../../utility/excelParse');
 const testConfig = require('../../config/testConfig');
-const TestHelper = require('../../utility/testHelper');
 const expect = require("chai").expect;
 
 // Get test data from Excel file (preferred) or config file as fallback
