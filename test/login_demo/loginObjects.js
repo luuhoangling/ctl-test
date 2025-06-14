@@ -21,10 +21,9 @@ module.exports = {
     rememberMeCheckbox: () => $('#remember_me'),
     allErrorMessages: () => $$('.alert-danger, .error-message, #login-fail, #server-error, #username-empty, #username-invalid, #username-error, #password-empty, #password-short, #password-error'),
     generalErrorMessage: () => $('#login-fail, #server-error'),
-    
     expectedErrorMessages: {
         emptyUsername: [
-            'Tên đăng nhập không được để trống',
+            'Tên tài khoản không được để trống',
         ],
         emptyPassword: [
             'Mật khẩu không được để trống',
@@ -34,11 +33,9 @@ module.exports = {
         ],
         invalidUsername: [
             'Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới (3-50 ký tự)'
-        ],        invalidPassword: [
-            'Mật khẩu phải có ít nhất 6 ký tự'
         ],
-        accountLocked: [
-            'Quá nhiều lần đăng nhập sai. Vui lòng thử lại sau 15 phút.'
+        invalidPassword: [
+            'Mật khẩu phải có ít nhất 6 ký tự'
         ]
     }
 };

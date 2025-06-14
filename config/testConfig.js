@@ -2,25 +2,32 @@ require('dotenv').config();
 
 module.exports = {
     // Base URL for the CTL web application - from environment variable
-    baseUrl: process.env.BASE_URL || 'http://127.0.0.1/ctl-web/',
+    baseUrl: process.env.BASE_URL,
 
     // Login page path - from environment variable
-    loginPath: process.env.LOGIN_PATH || '/login',
+    loginPath: process.env.LOGIN_PATH,
 
     // Test environment
-    testEnv: process.env.TEST_ENV || 'local',
+    testEnv: process.env.TEST_ENV,
 
     // Common timeouts - from environment variables
-    defaultTimeout: parseInt(process.env.DEFAULT_TIMEOUT) || 10000,
-    loginTimeout: parseInt(process.env.LOGIN_TIMEOUT) || 15000,
+    defaultTimeout: parseInt(process.env.DEFAULT_TIMEOUT),
+    loginTimeout: parseInt(process.env.LOGIN_TIMEOUT),
 
     // Browser settings
-    browser: process.env.BROWSER || 'chrome',
+    browser: process.env.BROWSER,
     headless: process.env.HEADLESS === 'true',
 
     // Debug settings
-    debugMode: process.env.DEBUG_MODE === 'true',
-    takeScreenshots: process.env.TAKE_SCREENSHOTS !== 'false',    // Test data - from environment variables with fallback
+    debugMode: process.env.DEBUG_MODE === 'true',    // Wait times for various operations
+    waitTimes: {
+        defaultWait: parseInt(process.env.DEFAULT_WAIT) || 500,
+        submitWait: parseInt(process.env.SUBMIT_WAIT) || 1000,
+        afterLoginWait: parseInt(process.env.AFTER_LOGIN_WAIT) || 2000,
+        elementWait: parseInt(process.env.ELEMENT_WAIT_TIMEOUT) || 5000,
+        redirectWait: parseInt(process.env.REDIRECT_WAIT_TIMEOUT) || 10000
+    },
+
     testUsers: {
         validUser: {
             username: process.env.VALID_USERNAME,
@@ -32,49 +39,6 @@ module.exports = {
         }
     },
 
-    // Common selectors that might be used across your PHP web app
-    commonSelectors: {
-        // Login form selectors
-        loginForm: 'form[name="login"]',
-        usernameInput: 'input[name="username"]',
-        emailInput: 'input[name="email"]',
-        passwordInput: 'input[name="password"]',
-        loginSubmitButton: 'button[type="submit"]',
-
-        // Error message selectors
-        errorMessage: '.error-message',
-        alertDanger: '.alert-danger',
-        invalidFeedback: '.invalid-feedback',
-
-        // Success indicators
-        dashboard: '.dashboard',
-        mainContent: '.main-content',
-        logoutButton: 'a[href*="logout"]'
-    },    // Error messages in Vietnamese and English
-    errorMessages: {
-        emptyUsername: [
-            'Vui lòng nhập tên đăng nhập',
-            'Vui lòng nhập tài khoản',
-            'Please enter username',
-            'Username is required',
-            'Tên đăng nhập không được để trống'
-        ],
-        emptyPassword: [
-            'Vui lòng nhập mật khẩu',
-            'Please enter password',
-            'Password is required',
-            'Mật khẩu không được để trống'
-        ],
-        invalidCredentials: [
-            'Tên đăng nhập hoặc mật khẩu không hợp lệ',
-            'Sai tên đăng nhập hoặc mật khẩu',
-            'Invalid username or password',
-            'Invalid credentials',
-            'Login failed',
-            'Đăng nhập thất bại'
-        ]
-    },
-    // Helper method to get full login URL
     getLoginUrl() {
         let baseUrl = this.baseUrl;
         if (!baseUrl.endsWith('/')) {
@@ -87,14 +51,22 @@ module.exports = {
         return baseUrl + loginPath;
     },
 
-    // Helper method to get environment info
-    getEnvironmentInfo() {
+    getLoginPageIdentifier() {
+        return this.loginPath.replace('/', '');
+    },
+
+    getTestUserCredentials(userType = 'valid') {
+        return userType === 'valid' ? this.testUsers.validUser : this.testUsers.invalidUser;
+    },
+
+    isDebugMode() {
+        return this.debugMode;
+    },
+
+    getBrowserConfig() {
         return {
-            environment: this.testEnv,
-            baseUrl: this.baseUrl,
             browser: this.browser,
-            headless: this.headless,
-            debugMode: this.debugMode
+            headless: this.headless
         };
     }
 };
