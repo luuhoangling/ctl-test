@@ -20,16 +20,14 @@ module.exports = {
 
     // Debug settings
     debugMode: process.env.DEBUG_MODE === 'true',
-    takeScreenshots: process.env.TAKE_SCREENSHOTS !== 'false',
-
-    // Test data - from environment variables with fallback
+    takeScreenshots: process.env.TAKE_SCREENSHOTS !== 'false',    // Test data - from environment variables with fallback
     testUsers: {
         validUser: {
-            email: process.env.VALID_EMAIL,
+            username: process.env.VALID_USERNAME,
             password: process.env.VALID_PASSWORD
         },
         invalidUser: {
-            email: process.env.INVALID_EMAIL,
+            username: process.env.INVALID_USERNAME,
             password: process.env.INVALID_PASSWORD
         }
     },
@@ -52,17 +50,14 @@ module.exports = {
         dashboard: '.dashboard',
         mainContent: '.main-content',
         logoutButton: 'a[href*="logout"]'
-    },
-
-    // Error messages in Vietnamese and English
+    },    // Error messages in Vietnamese and English
     errorMessages: {
         emptyUsername: [
             'Vui lòng nhập tên đăng nhập',
-            'Vui lòng nhập email',
+            'Vui lòng nhập tài khoản',
             'Please enter username',
-            'Please enter email',
-            'Email is required',
-            'Username is required'
+            'Username is required',
+            'Tên đăng nhập không được để trống'
         ],
         emptyPassword: [
             'Vui lòng nhập mật khẩu',

@@ -1,22 +1,32 @@
 const loginActions = require('./loginActions');
 
-describe('CTL Web login feature Test', () => {
+describe('Đăng nhập', () => {
 
     // Không tk, mk
-    it("Login with empty login credentials", async () => {
+    it("Không tài khoản, không mật khẩu", async () => {
         await loginActions.loginWithEmptyLoginCredentials();
     })    
     // Sai tk, đúng mk
-    it("Login with the wrong username and the correct password", async () => {
+    it("Sai tài khoản, đúng mật khẩu", async () => {
         await loginActions.loginWithWrongUsernameValidPass();
     })
     // Đúng tk, sai mk
-    it("Login with the correct username and the wrong credentials", async () => {
+    it("Đúng tài khoản, sai mật khẩu", async () => {
         await loginActions.loginWithValidUsernameInvalidPass();
     })
     // Đúng tk, mk
-    it("Login with the correct login credentials", async () => {
+    it("Đúng tài khoản và mật khẩu", async () => {
         await loginActions.loginWithValidCredentials();
     })
+
+    // Xuất kết quả ra Excel sau khi chạy xong tất cả test
+    after(async () => {
+        const filePath = await loginActions.exportTestResults();
+        if (filePath) {
+            console.log(`Đã xuất kết quả thành công: ${filePath}`);
+        } else {
+            console.log('Không thể xuất kết quả ra Excel');
+        }
+    });
 
 });
