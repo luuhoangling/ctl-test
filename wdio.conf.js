@@ -3,6 +3,7 @@ const testConfig = require('./config/testConfig');
 
 const registration = './test/registration/registration.spec.js';
 const login = './test/login/login.spec.js';
+const search = './test/search/search.spec.js';
 const placeOrder = './test/placeOrder/placeOrder.spec.js'
 
 exports.config = {
@@ -25,22 +26,26 @@ exports.config = {
     // process simply enclose them in an array within the specs array.
     //
     // If you are calling `wdio` from an NPM script (see https://docs.npmjs.com/cli/run-script),
-    // then the current working directory is where your `package.json` resides, so `wdio`
-    // will be called from there.
+    // then the current working directory is where your `package.json` resides, so `wdio`    // will be called from there.
     //
     specs: [
         registration,
         login,
+        search,
         placeOrder
     ],
     // Patterns to exclude.
     exclude: [
         // 'path/to/excluded/files'
-    ],
-    suites: {
+    ],    suites: {
         login: [
             [
                 login
+            ]
+        ],
+        search: [
+            [
+                search
             ]
         ],
         placeOrder: [
@@ -52,10 +57,12 @@ exports.config = {
             [
                 registration,
             ]
-        ], nopCommerce: [
+        ], 
+        nopCommerce: [
             [
                 registration,
                 login,
+                search,
                 placeOrder
             ]
         ],
@@ -64,6 +71,7 @@ exports.config = {
             [
                 registration,
                 login,
+                search,
                 placeOrder
             ]
         ]

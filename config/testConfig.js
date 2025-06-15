@@ -2,10 +2,11 @@ require('dotenv').config();
 
 module.exports = {
     // Base URL for the CTL web application - from environment variable
-    baseUrl: process.env.BASE_URL,
-
-    // Login page path - from environment variable
+    baseUrl: process.env.BASE_URL,    // Login page path - from environment variable
     loginPath: process.env.LOGIN_PATH,
+    
+    // Search page path - from environment variable
+    searchPath: process.env.SEARCH,
 
     // Test environment
     testEnv: process.env.TEST_ENV,
@@ -49,10 +50,20 @@ module.exports = {
             loginPath = loginPath.substring(1);
         }
         return baseUrl + loginPath;
+    },    getLoginPageIdentifier() {
+        return this.loginPath.replace('/', '');
     },
 
-    getLoginPageIdentifier() {
-        return this.loginPath.replace('/', '');
+    getSearchUrl() {
+        let baseUrl = this.baseUrl;
+        if (!baseUrl.endsWith('/')) {
+            baseUrl += '/';
+        }
+        let searchPath = this.searchPath;
+        if (searchPath.startsWith('/')) {
+            searchPath = searchPath.substring(1);
+        }
+        return baseUrl + searchPath;
     },
 
     getTestUserCredentials(userType = 'valid') {
