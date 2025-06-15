@@ -16,7 +16,7 @@ function sleep(ms) {
 
 
 class SearchActions {
-    
+
     async navigateToSearchPage() {
         // Navigate to search page using config
         const searchUrl = testConfig.getSearchUrl();
@@ -27,17 +27,17 @@ class SearchActions {
     // TK_01: Kiểm tra tìm kiếm với từ khóa hợp lệ
     async TK_01_ValidKeywordSearch() {
         const testName = searchObjects.testData.testNames.TK_01;
-        
+
         try {
             // Step 1: Navigate to search page
             await this.navigateToSearchPage();
-            
+
             // Step 2-3: Wait for search filter form and input to be visible (parallel check)
             const filterForm = await searchObjects.productFilterForm();
             const searchInput = await searchObjects.searchProductInput();
-            
+
             const [isFilterFormVisible, isSearchInputVisible] = await this.waitForElementsToBeVisible([filterForm, searchInput]);
-            
+
             if (!isFilterFormVisible || !isSearchInputVisible) {
                 throw new Error('Filter form or search input not visible');
             }
@@ -73,7 +73,7 @@ class SearchActions {
                 if (await productTitle.isDisplayed()) {
                     const titleText = await productTitle.getText();
                     const containsKeyword = titleText.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-                        searchObjects.testData.alternativeKeywords.some(keyword => 
+                        searchObjects.testData.alternativeKeywords.some(keyword =>
                             titleText.toLowerCase().includes(keyword.toLowerCase())
                         );
                 }
@@ -94,7 +94,8 @@ class SearchActions {
                 inputData: `Từ khóa: "${searchKeyword}" (Filter Form)`,
                 expectedResult: 'Hiển thị sản phẩm phù hợp',
                 actualResult: `Tìm thấy ${productCount} sản phẩm`
-            });        } catch (error) {
+            });
+        } catch (error) {
             console.log(`TK_01: tìm kiếm "${searchObjects.testData.searchKeywords.validKeyword}" và gặp lỗi "${error.message}".`);
 
             excelReporter.addTestResult({
@@ -104,14 +105,14 @@ class SearchActions {
                 inputData: `Từ khóa: "${searchObjects.testData.searchKeywords.validKeyword}" (Filter Form)`,
                 expectedResult: 'Hiển thị sản phẩm phù hợp',
                 actualResult: `Lỗi: ${error.message}`
-            });            throw error;
+            }); throw error;
         }
     }
-    
+
     // TK_02: Kiểm tra tìm kiếm với từ khóa không có kết quả
     async TK_02_EmptyKeywordSearch() {
         const testName = searchObjects.testData.testNames.TK_02;
-        
+
         try {
             // Step 1: Navigate to search page
             await this.navigateToSearchPage();
@@ -119,9 +120,9 @@ class SearchActions {
             // Step 2-3: Wait for search filter form and input to be visible (parallel check)
             const filterForm = await searchObjects.productFilterForm();
             const searchInput = await searchObjects.searchProductInput();
-            
+
             const [isFilterFormVisible, isSearchInputVisible] = await this.waitForElementsToBeVisible([filterForm, searchInput]);
-            
+
             if (!isFilterFormVisible || !isSearchInputVisible) {
                 throw new Error('Filter form or search input not visible');
             }
@@ -163,12 +164,12 @@ class SearchActions {
                         inputData: `Từ khóa: "${searchKeyword}" (Filter Form)`,
                         expectedResult: 'Hiển thị 0 sản phẩm',
                         actualResult: `Tìm thấy ${productCount} sản phẩm`
-                    });                    return; // Exit successfully
+                    }); return; // Exit successfully
                 } else {
-                    
+
                 }
             } else {
-                
+
             }
 
             // If we reach here, the test should fail
@@ -180,19 +181,20 @@ class SearchActions {
                 inputData: `Từ khóa: "${searchKeyword}" (Filter Form)`,
                 expectedResult: 'Hiển thị 0 sản phẩm',
                 actualResult: `Tìm thấy ${productCount} sản phẩm`
-            });            } catch (error) {
+            });
+        } catch (error) {
             console.log(`TK_02: tìm kiếm "${searchObjects.testData.searchKeywords.invalidKeyword}" và gặp lỗi "${error.message}".`);
 
             excelReporter.addTestResult({
                 testName: testName,
                 description: 'Tìm kiếm với từ khóa không có kết quả',
-                status: 'FAILED',                inputData: `Từ khóa: "${searchObjects.testData.searchKeywords.invalidKeyword}" (Filter Form)`,
+                status: 'FAILED', inputData: `Từ khóa: "${searchObjects.testData.searchKeywords.invalidKeyword}" (Filter Form)`,
                 expectedResult: 'Hiển thị 0 sản phẩm',
                 actualResult: `Lỗi trong quá trình test`
             });
         }
     }
-    
+
     // TK_03: Kiểm tra tìm kiếm với từ khóa có dấu hoặc không dấu
     async TK_03_AccentKeywordSearch() {
         const testName = searchObjects.testData.testNames.TK_03;
@@ -204,9 +206,9 @@ class SearchActions {
             // Use parallel checking for better performance
             const filterForm = await searchObjects.productFilterForm();
             const searchInput = await searchObjects.searchProductInput();
-            
+
             const [isFilterFormVisible, isSearchInputVisible] = await this.waitForElementsToBeVisible([filterForm, searchInput]);
-            
+
             if (!isFilterFormVisible || !isSearchInputVisible) {
                 throw new Error('Filter form or search input not visible');
             }
@@ -231,15 +233,13 @@ class SearchActions {
             // Use parallel checking for better performance
             const filterForm2 = await searchObjects.productFilterForm();
             const searchInput2 = await searchObjects.searchProductInput();
-            
+
             const [isFilterFormVisible2, isSearchInputVisible2] = await this.waitForElementsToBeVisible([filterForm2, searchInput2]);
-            
+
             if (!isFilterFormVisible2 || !isSearchInputVisible2) {
                 throw new Error('Filter form or search input not visible');
-            }
-
-            // Search with non-accented keyword "ao so mi"
-            const nonAccentedKeyword = 'ao so mi';
+            }            // Search with non-accented keyword from searchObjects
+            const nonAccentedKeyword = searchObjects.testData.searchKeywords.nonAccentedKeyword;
             await this.safeSetValue(searchInput2, nonAccentedKeyword);
 
             const applyFiltersBtn2 = await searchObjects.applyFiltersBtn();
@@ -255,8 +255,8 @@ class SearchActions {
             const nonAccentedProductCount = await searchObjects.waitForProductCountMessage(8000);
 
             // Step 4: Compare results
-            const testPassed = accentedProductCount > 0 && nonAccentedProductCount > 0 && 
-                              accentedProductCount === nonAccentedProductCount;
+            const testPassed = accentedProductCount > 0 && nonAccentedProductCount > 0 &&
+                accentedProductCount === nonAccentedProductCount;
 
             if (testPassed) {
                 console.log(`TK_03: tìm kiếm "${accentedKeyword}" (${accentedProductCount} sản phẩm) và "${nonAccentedKeyword}" (${nonAccentedProductCount} sản phẩm) - PASS`);
@@ -307,9 +307,9 @@ class SearchActions {
             // Step 2-3: Wait for search filter form and input to be visible (parallel check)
             const filterForm = await searchObjects.productFilterForm();
             const searchInput = await searchObjects.searchProductInput();
-            
+
             const [isFilterFormVisible, isSearchInputVisible] = await this.waitForElementsToBeVisible([filterForm, searchInput]);
-            
+
             if (!isFilterFormVisible || !isSearchInputVisible) {
                 throw new Error('Filter form or search input not visible');
             }
@@ -327,9 +327,7 @@ class SearchActions {
             }
 
             // Step 6: Wait for search results to load
-            await browser.pause(searchObjects.searchWaitTimes.searchSubmit);
-
-            // Step 7: Check for product count message or "Tất Cả Sản Phẩm" text
+            await browser.pause(searchObjects.searchWaitTimes.searchSubmit);            // Step 7: Check for product count message or "Tất Cả Sản Phẩm" text
             let productCount = 0;
             let hasAllProductsText = false;
 
@@ -338,11 +336,11 @@ class SearchActions {
             } catch (error) {
                 // If no product count message, check for "Tất Cả Sản Phẩm" text
                 try {
-                    const pageTitle = await $('h1, .page-title, .category-title');
+                    const pageTitle = await searchObjects.searchResultsTitle();
                     if (await pageTitle.isDisplayed()) {
                         const titleText = await pageTitle.getText();
-                        hasAllProductsText = titleText.toLowerCase().includes('tất cả sản phẩm') || 
-                                           titleText.toLowerCase().includes('all products');
+                        hasAllProductsText = titleText.toLowerCase().includes('tất cả sản phẩm') ||
+                            titleText.toLowerCase().includes('all products');
                     }
                 } catch (titleError) {
                     // Continue to check results anyway
@@ -412,25 +410,24 @@ class SearchActions {
             await this.navigateToSearchPage();            // Step 2-3: Wait for search filter form and category selector to be visible (parallel check)
             const filterForm = await searchObjects.productFilterForm();
             const categorySelect = await searchObjects.categoryFilterSelect();
-            
+
             const [isFilterFormVisible, isCategorySelectVisible] = await this.waitForElementsToBeVisible([filterForm, categorySelect]);
-            
+
             if (!isFilterFormVisible || !isCategorySelectVisible) {
                 throw new Error('Filter form or category selector not visible');
-            }            // Step 4: Select category "Áo" using searchObjects selector
-            const targetCategory = 'Áo';
+            }            // Step 4: Select category from searchObjects config
+            const targetCategory = searchObjects.testData.categoryConfig.targetCategory;
             let categorySelected = false;
 
             // Use the category selector from searchObjects
             try {
                 await categorySelect.selectByVisibleText(targetCategory);
                 categorySelected = true;
-            } catch (error) {
-                // Try alternative approaches with searchObjects selector
-                const options = await categorySelect.$$('option');
+            } catch (error) {                // Try alternative approaches with searchObjects selector
+                const options = await searchObjects.categoryOptions();
                 for (let option of options) {
                     const optionText = await option.getText();
-                    if (optionText.toLowerCase().includes('áo') || 
+                    if (optionText.toLowerCase().includes('áo') ||
                         optionText.toLowerCase().includes('ao') ||
                         optionText.toLowerCase().includes('shirt') ||
                         optionText.toLowerCase().includes('clothing')) {
@@ -455,7 +452,7 @@ class SearchActions {
             await browser.pause(searchObjects.searchWaitTimes.searchSubmit);            // Step 7: Get product count and verify results
             const productCount = await searchObjects.waitForProductCountMessage(8000);
             const isResultsVisible = await searchObjects.waitForSearchResults(15000);
-            
+
             // Use the new specific selectors
             const productCards = await searchObjects.productCards();
             const actualItemsCount = productCards.length;
@@ -477,37 +474,34 @@ class SearchActions {
 
             // Check ALL products (not just first 10) since we know exact count now
             for (let i = 0; i < actualItemsCount; i++) {
-                const productCard = productCards[i];
+                const productCard = productCards[i];                // Get product name using searchObjects helper method
+                const titleText = await searchObjects.getProductNameFromCard(productCard);
                 
-                // Get product name using data-testid selector
-                const productNameElements = await productCard.$$('[data-testid^="product-name-"]');
-                
-                if (productNameElements.length > 0) {
-                    const titleText = await productNameElements[0].getText();
+                if (titleText) {
                     const titleLower = titleText.toLowerCase();
-                    
+
                     // Check if product title contains category-related keywords
-                    const isValidCategory = titleLower.includes('áo') || 
-                                          titleLower.includes('ao') ||
-                                          titleLower.includes('shirt') ||
-                                          titleLower.includes('blouse') ||
-                                          titleLower.includes('top') ||
-                                          titleLower.includes('khoác') ||
-                                          titleLower.includes('vest') ||
-                                          titleLower.includes('jacket');
-                    
+                    const isValidCategory = titleLower.includes('áo') ||
+                        titleLower.includes('ao') ||
+                        titleLower.includes('shirt') ||
+                        titleLower.includes('blouse') ||
+                        titleLower.includes('top') ||
+                        titleLower.includes('khoác') ||
+                        titleLower.includes('vest') ||
+                        titleLower.includes('jacket');
+
                     // Check for invalid categories
                     const isInvalidCategory = titleLower.includes('quần') ||
-                                            titleLower.includes('quan') ||
-                                            titleLower.includes('giày') ||
-                                            titleLower.includes('giay') ||
-                                            titleLower.includes('shoes') ||
-                                            titleLower.includes('pants') ||
-                                            titleLower.includes('trousers') ||
-                                            titleLower.includes('shorts') ||
-                                            titleLower.includes('sandal') ||
-                                            titleLower.includes('boot');
-                    
+                        titleLower.includes('quan') ||
+                        titleLower.includes('giày') ||
+                        titleLower.includes('giay') ||
+                        titleLower.includes('shoes') ||
+                        titleLower.includes('pants') ||
+                        titleLower.includes('trousers') ||
+                        titleLower.includes('shorts') ||
+                        titleLower.includes('sandal') ||
+                        titleLower.includes('boot');
+
                     if (isValidCategory && !isInvalidCategory) {
                         validProducts++;
                         validProductNames.push(titleText);
@@ -537,7 +531,7 @@ class SearchActions {
                 });
 
             } else {
-                const failureReason = invalidProducts > 0 ? 
+                const failureReason = invalidProducts > 0 ?
                     `Tìm thấy ${invalidProducts}/${actualItemsCount} sản phẩm không thuộc danh mục Áo: ${invalidProductNames.slice(0, 3).join(', ')}${invalidProductNames.length > 3 ? '...' : ''}` :
                     `Không tìm thấy sản phẩm nào thuộc danh mục ${targetCategory}`;
 
@@ -564,9 +558,10 @@ class SearchActions {
                 inputData: 'Danh mục: "Áo"',
                 expectedResult: 'Chỉ hiển thị sản phẩm trong danh mục đã chọn',
                 actualResult: `Lỗi trong quá trình test: ${error.message}`
-            });        }
+            });
+        }
     }
-    
+
     // TK_06: Nhập khoảng giá tối thiểu và tối đa hợp lệ → Hiển thị sản phẩm nằm trong khoảng
     async TK_06_PriceRangeFilter() {
         const testName = searchObjects.testData.testNames.TK_06;
@@ -579,9 +574,9 @@ class SearchActions {
             const filterForm = await searchObjects.productFilterForm();
             const priceMinInput = await searchObjects.priceMinInput();
             const priceMaxInput = await searchObjects.priceMaxInput();
-            
+
             const [isFilterFormVisible, isPriceMinVisible, isPriceMaxVisible] = await this.waitForElementsToBeVisible([filterForm, priceMinInput, priceMaxInput]);
-            
+
             if (!isFilterFormVisible || !isPriceMinVisible || !isPriceMaxVisible) {
                 throw new Error('Filter form or price inputs not visible');
             }
@@ -589,7 +584,7 @@ class SearchActions {
             // Step 4: Set price range using test data
             const minPrice = searchObjects.testData.priceRanges.validMin;
             const maxPrice = searchObjects.testData.priceRanges.validMax;
-            
+
             await this.safeSetValue(priceMinInput, minPrice.toString());
             await this.safeSetValue(priceMaxInput, maxPrice.toString());
 
@@ -621,28 +616,24 @@ class SearchActions {
             const priceDetails = [];
             const invalidPriceDetails = [];
 
-            for (let i = 0; i < Math.min(itemsCount, 10); i++) { // Check first 10 products for performance
-                const productCard = productCards[i];
-                
-                // Get product name and price
-                const productNameElements = await productCard.$$('[data-testid^="product-name-"]');
-                const productPriceElements = await productCard.$$('[data-testid^="product-price-"]');
-                
-                if (productNameElements.length > 0 && productPriceElements.length > 0) {
-                    const productName = await productNameElements[0].getText();
-                    const priceText = await productPriceElements[0].getText();
-                    
+            for (let i = 0; i < Math.min(itemsCount, searchObjects.testData.validation.maxProductsToCheck); i++) { // Check first 10 products for performance
+                const productCard = productCards[i];                // Get product name and price using searchObjects helper methods
+                const productName = await searchObjects.getProductNameFromCard(productCard);
+                const priceText = await searchObjects.getProductPriceFromCard(productCard);
+
+                if (productName && priceText) {
+
                     // Extract numeric price from text (remove currency symbols, dots, commas)
                     const priceMatch = priceText.match(/[\d.,]+/);
                     if (priceMatch) {
                         // Remove dots used as thousand separators, keep commas as decimal separators
                         const cleanPrice = priceMatch[0].replace(/\./g, '').replace(/,/g, '.');
                         const productPrice = parseFloat(cleanPrice);
-                        
+
                         if (!isNaN(productPrice)) {
                             // Convert to VND if needed (assuming price might be in different format)
                             const finalPrice = productPrice < 1000 ? productPrice * 1000 : productPrice;
-                            
+
                             if (finalPrice >= minPrice && finalPrice <= maxPrice) {
                                 validPriceProducts++;
                                 priceDetails.push(`${productName}: ${finalPrice.toLocaleString('vi-VN')} VND`);
@@ -657,7 +648,7 @@ class SearchActions {
             // Pass if we have products and majority are within price range
             const totalCheckedProducts = validPriceProducts + invalidPriceProducts;
             const validPercentage = totalCheckedProducts > 0 ? (validPriceProducts / totalCheckedProducts) : 0;
-            
+
             // Pass if at least 80% of products are within price range
             const testPassed = productCount > 0 && itemsCount > 0 && validPercentage >= 0.8;
 
@@ -714,16 +705,14 @@ class SearchActions {
         }
     }    // TK_07_AllCategoryFilter: Chọn lại "Tất cả danh mục" → Hiển thị toàn bộ sản phẩm
     async TK_07_AllCategoryFilter() {
-        const testName = 'TK_07: Chọn lại "Tất cả danh mục" → Hiển thị toàn bộ sản phẩm';
+        const testName = searchObjects.testData.testNames.TK_07_AllCategory;
 
         try {
             // Note: This test runs after TK_06, so the page is currently filtered by "Quần" category
             // Step 1: Wait for category selector to be available
             const categorySelect = await searchObjects.categoryFilterSelect();
-            await this.waitForElementToBeVisible(categorySelect);
-
-            // Step 2: Change to "Tất cả danh mục" (All categories)
-            const allCategoriesText = 'Tất cả danh mục';
+            await this.waitForElementToBeVisible(categorySelect);            // Step 2: Change to "Tất cả danh mục" (All categories) from searchObjects config
+            const allCategoriesText = searchObjects.testData.categoryConfig.allCategoriesText;
             let categorySelected = false;
 
             try {
@@ -740,13 +729,12 @@ class SearchActions {
                     try {
                         await categorySelect.selectByAttribute('value', '0');
                         categorySelected = true;
-                    } catch (valueError) {
-                        // Try finding options with common "all" keywords
-                        const options = await categorySelect.$$('option');
+                    } catch (valueError) {                        // Try finding options with common "all" keywords
+                        const options = await searchObjects.categoryOptions();
                         for (let option of options) {
                             const optionText = await option.getText();
                             const optionValue = await option.getAttribute('value');
-                            if (optionText.toLowerCase().includes('tất cả') || 
+                            if (optionText.toLowerCase().includes('tất cả') ||
                                 optionText.toLowerCase().includes('all') ||
                                 optionValue === '0' || optionValue === '') {
                                 await option.click();
@@ -773,15 +761,14 @@ class SearchActions {
             let hasAllProductsText = false;
 
             try {
-                productCount = await searchObjects.waitForProductCountMessage(8000);
-            } catch (error) {
+                productCount = await searchObjects.waitForProductCountMessage(8000);            } catch (error) {
                 // If no product count message, check for "Tất Cả Sản Phẩm" text
                 try {
-                    const pageTitle = await $('h1, .page-title, .category-title');
+                    const pageTitle = await searchObjects.searchResultsTitle();
                     if (await pageTitle.isDisplayed()) {
                         const titleText = await pageTitle.getText();
-                        hasAllProductsText = titleText.toLowerCase().includes('tất cả sản phẩm') || 
-                                           titleText.toLowerCase().includes('all products');
+                        hasAllProductsText = titleText.toLowerCase().includes('tất cả sản phẩm') ||
+                            titleText.toLowerCase().includes('all products');
                     }
                 } catch (titleError) {
                     // Continue to check results anyway
@@ -796,7 +783,7 @@ class SearchActions {
             console.log(`TK_07: Chọn "Tất cả danh mục" - Tìm thấy ${productCount} sản phẩm`);
 
             // Step 6: Determine test result - Pass if has "Tất Cả Sản Phẩm" text or products displayed
-            const testPassed = (productCount > 0 || itemsCount > 0 || hasAllProductsText) && isResultsVisible;            if (testPassed) {
+            const testPassed = (productCount > 0 || itemsCount > 0 || hasAllProductsText) && isResultsVisible; if (testPassed) {
                 let resultMessage = '';
                 if (hasAllProductsText) {
                     resultMessage = `Hiển thị "Tất Cả Sản Phẩm" với ${itemsCount} sản phẩm`;
@@ -840,9 +827,10 @@ class SearchActions {
                 inputData: 'Chuyển từ "Quần" → "Tất cả danh mục"',
                 expectedResult: 'Hiển thị sản phẩm từ tất cả danh mục',
                 actualResult: `Lỗi trong quá trình test: ${error.message}`
-            });        }
+            });
+        }
     }
-      // TK_07: Nhập giá tối thiểu lớn hơn giá tối đa → Kiểm tra hiển thị thông báo lỗi validation
+    // TK_07: Nhập giá tối thiểu lớn hơn giá tối đa → Kiểm tra hiển thị thông báo lỗi validation
     async TK_07_InvalidPriceRange() {
         const testName = searchObjects.testData.testNames.TK_07;
 
@@ -854,15 +842,15 @@ class SearchActions {
             const filterForm = await searchObjects.productFilterForm();
             const priceMinInput = await searchObjects.priceMinInput();
             const priceMaxInput = await searchObjects.priceMaxInput();
-            
+
             const [isFilterFormVisible, isPriceMinVisible, isPriceMaxVisible] = await this.waitForElementsToBeVisible([filterForm, priceMinInput, priceMaxInput]);
-            
+
             if (!isFilterFormVisible || !isPriceMinVisible || !isPriceMaxVisible) {
                 throw new Error('Filter form or price inputs not visible');
             }            // Step 4: Set INVALID price range using test data
             const minPrice = searchObjects.testData.priceRanges.invalidMin; // 1,000,000 VND (higher)
             const maxPrice = searchObjects.testData.priceRanges.invalidMax;  // 100,000 VND (lower)
-            
+
             await this.safeSetValue(priceMinInput, minPrice.toString());
             console.log(`TK_07: Nhập giá tối thiểu: ${minPrice.toLocaleString('vi-VN')} VND`);
 
@@ -877,15 +865,15 @@ class SearchActions {
             let errorMessage = '';
             let isValidationVisible = false;
             const expectedErrorMessage = searchObjects.testData.errorMessages.priceValidation;
-            
+
             try {
                 // Check for specific validation error element using searchObjects
                 const validationErrorElement = await searchObjects.priceValidationError();
-                
+
                 if (await validationErrorElement.isDisplayed()) {
                     errorMessage = await validationErrorElement.getText();
                     errorMessage = errorMessage.trim();
-                    
+
                     // Check if the error message matches exactly
                     if (errorMessage === expectedErrorMessage) {
                         isValidationVisible = true;
@@ -900,7 +888,7 @@ class SearchActions {
 
             } catch (e) {
                 console.log(`TK_07: Không tìm thấy element [data-testid="price-validation-error"]: ${e.message}`);
-                
+
                 // Fallback: try to find the error message in other possible locations
                 try {
                     const allElements = await $$('*');
@@ -923,13 +911,13 @@ class SearchActions {
             // Step 8: Try to apply filter to see system behavior
             let filterApplied = false;
             let productCount = 0;
-            
+
             try {
                 const applyFiltersBtn = await searchObjects.applyFiltersBtn();
                 if (await applyFiltersBtn.isDisplayed() && await applyFiltersBtn.isEnabled()) {
                     await this.safeClick(applyFiltersBtn);
                     filterApplied = true;
-                    
+
                     // Wait for results and count products
                     await browser.pause(searchObjects.searchWaitTimes.searchSubmit);
                     productCount = await searchObjects.waitForProductCountMessage(5000);
@@ -964,7 +952,7 @@ class SearchActions {
                 } else {
                     actualResult = `Thông báo không chính xác: "${errorMessage}"`;
                 }
-                
+
                 if (filterApplied && productCount > 0) {
                     actualResult += `, vẫn tìm được ${productCount} sản phẩm`;
                 }
@@ -980,7 +968,7 @@ class SearchActions {
             }
 
         } catch (error) {
-            console.log(`TK_07: gặp lỗi trong quá trình test - ERROR: ${error.message}`);            excelReporter.addTestResult({
+            console.log(`TK_07: gặp lỗi trong quá trình test - ERROR: ${error.message}`); excelReporter.addTestResult({
                 testName: testName,
                 description: 'Kiểm tra validation khoảng giá không hợp lệ (min > max)',
                 status: 'ERROR',
@@ -1000,15 +988,15 @@ class SearchActions {
             // Step 2-3: Wait for price inputs to be visible
             const priceMinInput = await searchObjects.priceMinInput();
             const priceMaxInput = await searchObjects.priceMaxInput();
-            
+
             const [isPriceMinVisible, isPriceMaxVisible] = await this.waitForElementsToBeVisible([priceMinInput, priceMaxInput]);
-            
+
             if (!isPriceMinVisible || !isPriceMaxVisible) {
                 throw new Error('Price inputs not visible');
             }            // Step 4: Enter text instead of numbers using test data
             const testText = searchObjects.testData.priceRanges.textInput;
             console.log(`TK_08: Nhập text "${testText}" vào ô giá tối thiểu`);
-            
+
             await this.safeSetValue(priceMinInput, testText);
             await browser.pause(1000); // Wait for any validation or auto-clearing
 
@@ -1028,7 +1016,7 @@ class SearchActions {
             // Pass if inputs are empty or "0" after entering text
             const isMinInputCleared = !minInputValue || minInputValue === '0' || minInputValue.trim() === '';
             const isMaxInputCleared = !maxInputValue || maxInputValue === '0' || maxInputValue.trim() === '';
-            
+
             const testPassed = isMinInputCleared && isMaxInputCleared;
 
             if (testPassed) {
@@ -1066,9 +1054,10 @@ class SearchActions {
                 inputData: 'Text: "abc123"',
                 expectedResult: 'Ô giá tự động xóa/reset về 0 khi nhập text',
                 actualResult: `Lỗi trong quá trình test: ${error.message}`
-            });        }
+            });
+        }
     }
-      // TK_09: Sắp xếp theo giá tăng dần → Sản phẩm hiển thị từ giá thấp đến cao
+    // TK_09: Sắp xếp theo giá tăng dần → Sản phẩm hiển thị từ giá thấp đến cao
     async TK_09_SortByPriceAscending() {
         const testName = searchObjects.testData.testNames.TK_09;
 
@@ -1081,14 +1070,14 @@ class SearchActions {
             await this.waitForElementToBeVisible(sortSelect);            // Step 3: Select sort by price ascending using test data
             const sortValueAsc = searchObjects.testData.dropdownValues.sortPriceAsc;
             console.log(`TK_09: Chọn sắp xếp theo giá tăng dần`);
-            
+
             try {
                 await sortSelect.selectByAttribute('value', sortValueAsc);
             } catch (error) {
                 // Try alternative values if the first one fails
                 const alternativeValues = ['price_asc', 'price-low-to-high', 'PriceAsc', 'price'];
                 let sorted = false;
-                
+
                 for (const value of alternativeValues) {
                     try {
                         await sortSelect.selectByAttribute('value', value);
@@ -1098,7 +1087,7 @@ class SearchActions {
                         continue;
                     }
                 }
-                
+
                 if (!sorted) {
                     // Try by visible text
                     const textOptions = ['Giá tăng dần', 'Giá: Thấp đến Cao', 'Price: Low to High'];
@@ -1112,7 +1101,7 @@ class SearchActions {
                         }
                     }
                 }
-                
+
                 if (!sorted) {
                     throw new Error('Cannot find price ascending sort option');
                 }
@@ -1127,29 +1116,26 @@ class SearchActions {
             // Step 5: Wait for results to load
             await browser.pause(searchObjects.searchWaitTimes.searchSubmit);
             const productCount = await searchObjects.waitForProductCountMessage(8000);
-            
+
             if (productCount === 0) {
                 throw new Error('Không có sản phẩm để kiểm tra sắp xếp');
-            }
-
-            // Step 6: Get product prices and verify ascending order
+            }            // Step 6: Get product prices and verify ascending order
             const productCards = await searchObjects.productCards();
             const prices = [];
             const priceDetails = [];
-            
+
             // Get prices from first 5 products for verification
             for (let i = 0; i < Math.min(productCards.length, 5); i++) {
                 const productCard = productCards[i];
-                const productPriceElements = await productCard.$$('[data-testid^="product-price-"]');
-                
-                if (productPriceElements.length > 0) {
-                    const priceText = await productPriceElements[0].getText();
+                const priceText = await searchObjects.getProductPriceFromCard(productCard);
+
+                if (priceText) {
                     const priceMatch = priceText.match(/[\d.,]+/);
-                    
+
                     if (priceMatch) {
                         const cleanPrice = priceMatch[0].replace(/\./g, '').replace(/,/g, '.');
                         const productPrice = parseFloat(cleanPrice);
-                        
+
                         if (!isNaN(productPrice)) {
                             const finalPrice = productPrice < 1000 ? productPrice * 1000 : productPrice;
                             prices.push(finalPrice);
@@ -1162,7 +1148,7 @@ class SearchActions {
             // Step 7: Check if prices are in ascending order
             let isAscending = true;
             for (let i = 1; i < prices.length; i++) {
-                if (prices[i] < prices[i-1]) {
+                if (prices[i] < prices[i - 1]) {
                     isAscending = false;
                     break;
                 }
@@ -1180,7 +1166,7 @@ class SearchActions {
                     status: 'PASSED',
                     inputData: 'Sắp xếp: Giá tăng dần',
                     expectedResult: 'Sản phẩm hiển thị từ giá thấp đến cao',
-                    actualResult: `${prices.length} sản phẩm theo thứ tự đúng: ${priceDetails.slice(0,3).join(' → ')}${priceDetails.length > 3 ? '...' : ''}`
+                    actualResult: `${prices.length} sản phẩm theo thứ tự đúng: ${priceDetails.slice(0, 3).join(' → ')}${priceDetails.length > 3 ? '...' : ''}`
                 });
 
             } else {
@@ -1206,9 +1192,10 @@ class SearchActions {
                 inputData: 'Sắp xếp: Giá tăng dần',
                 expectedResult: 'Sản phẩm hiển thị từ giá thấp đến cao',
                 actualResult: `Lỗi trong quá trình test: ${error.message}`
-            });        }
+            });
+        }
     }
-      // TK_10: Sắp xếp theo giá giảm dần → Sản phẩm hiển thị từ giá cao đến thấp
+    // TK_10: Sắp xếp theo giá giảm dần → Sản phẩm hiển thị từ giá cao đến thấp
     async TK_10_SortByPriceDescending() {
         const testName = searchObjects.testData.testNames.TK_10;
 
@@ -1223,14 +1210,14 @@ class SearchActions {
             // Step 3: Select sort by price descending
             const sortValueDesc = 'price-desc'; // Common value for price descending
             console.log(`TK_10: Chọn sắp xếp theo giá giảm dần`);
-            
+
             try {
                 await sortSelect.selectByAttribute('value', sortValueDesc);
             } catch (error) {
                 // Try alternative values if the first one fails
                 const alternativeValues = ['price_desc', 'price-high-to-low', 'PriceDesc'];
                 let sorted = false;
-                
+
                 for (const value of alternativeValues) {
                     try {
                         await sortSelect.selectByAttribute('value', value);
@@ -1240,7 +1227,7 @@ class SearchActions {
                         continue;
                     }
                 }
-                
+
                 if (!sorted) {
                     // Try by visible text
                     const textOptions = ['Giá giảm dần', 'Giá: Cao đến Thấp', 'Price: High to Low'];
@@ -1254,7 +1241,7 @@ class SearchActions {
                         }
                     }
                 }
-                
+
                 if (!sorted) {
                     throw new Error('Cannot find price descending sort option');
                 }
@@ -1269,29 +1256,26 @@ class SearchActions {
             // Step 5: Wait for results to load
             await browser.pause(searchObjects.searchWaitTimes.searchSubmit);
             const productCount = await searchObjects.waitForProductCountMessage(8000);
-            
+
             if (productCount === 0) {
                 throw new Error('Không có sản phẩm để kiểm tra sắp xếp');
-            }
-
-            // Step 6: Get product prices and verify descending order
+            }            // Step 6: Get product prices and verify descending order
             const productCards = await searchObjects.productCards();
             const prices = [];
             const priceDetails = [];
-            
+
             // Get prices from first 5 products for verification
             for (let i = 0; i < Math.min(productCards.length, 5); i++) {
                 const productCard = productCards[i];
-                const productPriceElements = await productCard.$$('[data-testid^="product-price-"]');
-                
-                if (productPriceElements.length > 0) {
-                    const priceText = await productPriceElements[0].getText();
+                const priceText = await searchObjects.getProductPriceFromCard(productCard);
+
+                if (priceText) {
                     const priceMatch = priceText.match(/[\d.,]+/);
-                    
+
                     if (priceMatch) {
                         const cleanPrice = priceMatch[0].replace(/\./g, '').replace(/,/g, '.');
                         const productPrice = parseFloat(cleanPrice);
-                        
+
                         if (!isNaN(productPrice)) {
                             const finalPrice = productPrice < 1000 ? productPrice * 1000 : productPrice;
                             prices.push(finalPrice);
@@ -1304,7 +1288,7 @@ class SearchActions {
             // Step 7: Check if prices are in descending order
             let isDescending = true;
             for (let i = 1; i < prices.length; i++) {
-                if (prices[i] > prices[i-1]) {
+                if (prices[i] > prices[i - 1]) {
                     isDescending = false;
                     break;
                 }
@@ -1322,7 +1306,7 @@ class SearchActions {
                     status: 'PASSED',
                     inputData: 'Sắp xếp: Giá giảm dần',
                     expectedResult: 'Sản phẩm hiển thị từ giá cao đến thấp',
-                    actualResult: `${prices.length} sản phẩm theo thứ tự đúng: ${priceDetails.slice(0,3).join(' → ')}${priceDetails.length > 3 ? '...' : ''}`
+                    actualResult: `${prices.length} sản phẩm theo thứ tự đúng: ${priceDetails.slice(0, 3).join(' → ')}${priceDetails.length > 3 ? '...' : ''}`
                 });
 
             } else {
@@ -1348,9 +1332,10 @@ class SearchActions {
                 inputData: 'Sắp xếp: Giá giảm dần',
                 expectedResult: 'Sản phẩm hiển thị từ giá cao đến thấp',
                 actualResult: `Lỗi trong quá trình test: ${error.message}`
-            });        }
+            });
+        }
     }
-      // TK_11: Kết hợp tìm kiếm + danh mục + giá → Kết quả chính xác theo tất cả điều kiện
+    // TK_11: Kết hợp tìm kiếm + danh mục + giá → Kết quả chính xác theo tất cả điều kiện
     async TK_11_CombinedSearch() {
         const testName = searchObjects.testData.testNames.TK_11;
 
@@ -1362,9 +1347,9 @@ class SearchActions {
             const searchInput = await searchObjects.searchProductInput();
             const categorySelect = await searchObjects.categoryFilterSelect();
             const sortSelect = await searchObjects.sortProductsSelect();
-            
+
             const [isSearchVisible, isCategoryVisible, isSortVisible] = await this.waitForElementsToBeVisible([searchInput, categorySelect, sortSelect]);
-            
+
             if (!isSearchVisible || !isCategoryVisible || !isSortVisible) {
                 throw new Error('Filter elements not visible');
             }
@@ -1377,7 +1362,7 @@ class SearchActions {
             // Step 4: Select category "Áo" (shirt/clothing category)
             const categoryText = 'Áo';
             let categorySelected = false;
-            
+
             try {
                 await categorySelect.selectByVisibleText(categoryText);
                 categorySelected = true;
@@ -1394,7 +1379,7 @@ class SearchActions {
                     }
                 }
             }
-            
+
             if (categorySelected) {
                 console.log(`TK_11: Chọn danh mục: "${categoryText}"`);
             } else {
@@ -1403,13 +1388,13 @@ class SearchActions {
 
             // Step 5: Set sort by price descending (high to low)
             console.log(`TK_11: Sắp xếp từ cao xuống thấp`);
-            
+
             try {
                 await sortSelect.selectByAttribute('value', 'price-desc');
             } catch (error) {
                 const alternativeValues = ['price_desc', 'price-high-to-low', 'PriceDesc'];
                 let sorted = false;
-                
+
                 for (const value of alternativeValues) {
                     try {
                         await sortSelect.selectByAttribute('value', value);
@@ -1419,7 +1404,7 @@ class SearchActions {
                         continue;
                     }
                 }
-                
+
                 if (!sorted) {
                     const textOptions = ['Giá giảm dần', 'Giá: Cao đến Thấp', 'Price: High to Low'];
                     for (const text of textOptions) {
@@ -1443,7 +1428,7 @@ class SearchActions {
             // Step 7: Wait for results and verify
             await browser.pause(searchObjects.searchWaitTimes.searchSubmit);
             const productCount = await searchObjects.waitForProductCountMessage(8000);
-            
+
             if (productCount === 0) {
                 throw new Error('Không tìm thấy sản phẩm với bộ lọc kết hợp');
             }
@@ -1454,42 +1439,33 @@ class SearchActions {
             let priceOrderCorrect = true;
             const prices = [];
             const productDetails = [];
-            
+
             // Check first 3 products
             for (let i = 0; i < Math.min(productCards.length, 3); i++) {
-                const productCard = productCards[i];
-                
-                // Check product name contains keyword
-                const productNameElements = await productCard.$$('[data-testid^="product-name-"]');
-                if (productNameElements.length > 0) {
-                    const productName = await productNameElements[0].getText();
-                    if (productName.toLowerCase().includes(searchKeyword.toLowerCase())) {
-                        keywordMatches++;
-                    }
-                    
-                    // Get price for order verification
-                    const productPriceElements = await productCard.$$('[data-testid^="product-price-"]');
-                    if (productPriceElements.length > 0) {
-                        const priceText = await productPriceElements[0].getText();
-                        const priceMatch = priceText.match(/[\d.,]+/);
-                        
-                        if (priceMatch) {
-                            const cleanPrice = priceMatch[0].replace(/\./g, '').replace(/,/g, '.');
-                            const productPrice = parseFloat(cleanPrice);
-                            
-                            if (!isNaN(productPrice)) {
-                                const finalPrice = productPrice < 1000 ? productPrice * 1000 : productPrice;
-                                prices.push(finalPrice);
-                                productDetails.push(`${productName}: ${finalPrice.toLocaleString('vi-VN')} VND`);
-                            }
+                const productCard = productCards[i];                // Check product name contains keyword
+                const productName = await searchObjects.getProductNameFromCard(productCard);
+                if (productName && productName.toLowerCase().includes(searchKeyword.toLowerCase())) {
+                    keywordMatches++;
+                }                // Get price for order verification
+                const priceText = await searchObjects.getProductPriceFromCard(productCard);
+                if (priceText) {
+                    const priceMatch = priceText.match(/[\d.,]+/);
+
+                    if (priceMatch) {
+                        const cleanPrice = priceMatch[0].replace(/\./g, '').replace(/,/g, '.');
+                        const productPrice = parseFloat(cleanPrice);
+
+                        if (!isNaN(productPrice)) {
+                            const finalPrice = productPrice < 1000 ? productPrice * 1000 : productPrice;
+                            prices.push(finalPrice);
+                            productDetails.push(`${productName}: ${finalPrice.toLocaleString('vi-VN')} VND`);
                         }
-                    }
-                }
+                    }                }
             }
 
             // Check price descending order
             for (let i = 1; i < prices.length; i++) {
-                if (prices[i] > prices[i-1]) {
+                if (prices[i] > prices[i - 1]) {
                     priceOrderCorrect = false;
                     break;
                 }
@@ -1537,16 +1513,17 @@ class SearchActions {
                 inputData: 'Từ khóa: "sơ mi", Danh mục: "Áo", Sắp xếp: Giá cao→thấp',
                 expectedResult: 'Kết quả chính xác theo tất cả điều kiện',
                 actualResult: `Lỗi trong quá trình test: ${error.message}`
-            });        }
+            });
+        }
     }
-      // TK_12: Nhấn "Xóa Bộ Lọc" sau khi lọc → Trả về trạng thái mặc định, hiển thị toàn bộ sản phẩm
+    // TK_12: Nhấn "Xóa Bộ Lọc" sau khi lọc → Trả về trạng thái mặc định, hiển thị toàn bộ sản phẩm
     async TK_12_ClearFilters() {
         const testName = searchObjects.testData.testNames.TK_12;
 
         try {
             // Step 1: First, apply some filters (use results from TK_11)
             // This test should run after TK_11 to have filters already applied
-            
+
             // Step 2: Wait for clear filters button to be visible
             const clearFiltersBtn = await searchObjects.clearFiltersBtn();
             await this.waitForElementToBeVisible(clearFiltersBtn);
@@ -1600,7 +1577,7 @@ class SearchActions {
             // 1. Search input is cleared (empty)
             // 2. Category is reset to default (usually "0" or empty or first option)
             // 3. Product count increased or shows all products
-            
+
             const isSearchCleared = !searchValue || searchValue.trim() === '';
             const isCategoryReset = !categoryValue || categoryValue === '0' || categoryValue === '';
             const hasMoreProducts = clearedProductCount >= filteredProductCount;
@@ -1648,9 +1625,10 @@ class SearchActions {
                 inputData: 'Nhấn nút "Xóa Bộ Lọc"',
                 expectedResult: 'Form reset, hiển thị toàn bộ sản phẩm',
                 actualResult: `Lỗi trong quá trình test: ${error.message}`
-            });        }
+            });
+        }
     }
-    
+
     // Helper methods
     async waitForElementToBeVisible(element, timeout = 5000) {
         try {
@@ -1662,7 +1640,7 @@ class SearchActions {
     }
     async waitForElementsToBeVisible(elements, timeout = 5000) {
         try {
-            const promises = elements.map(element => 
+            const promises = elements.map(element =>
                 element.waitForDisplayed({ timeout }).then(() => true).catch(() => false)
             );
             const results = await Promise.all(promises);
@@ -1674,7 +1652,7 @@ class SearchActions {
 
     async waitForElementToBeClickable(element, timeout = 5000) {
         try {
-            await element.waitForClickable({ timeout });            return true;
+            await element.waitForClickable({ timeout }); return true;
         } catch (error) {
             return false;
         }
@@ -1683,7 +1661,7 @@ class SearchActions {
     async safeClick(element) {
         try {
             await this.waitForElementToBeClickable(element);
-            await element.click();            return true;
+            await element.click(); return true;
         } catch (error) {
             return false;
         }
@@ -1693,7 +1671,7 @@ class SearchActions {
         try {
             await this.waitForElementToBeVisible(element);
             await element.clearValue();
-            await element.setValue(value);            return true;
+            await element.setValue(value); return true;
         } catch (error) {
             return false;
         }
@@ -1702,7 +1680,7 @@ class SearchActions {
     async safeSelectByValue(element, value) {
         try {
             await this.waitForElementToBeVisible(element);
-            await element.selectByAttribute('value', value);            return true;
+            await element.selectByAttribute('value', value); return true;
         } catch (error) {
             return false;
         }
@@ -1710,10 +1688,11 @@ class SearchActions {
 
     async getElementText(element) {
         try {
-            await this.waitForElementToBeVisible(element);            return await element.getText();
+            await this.waitForElementToBeVisible(element); return await element.getText();
         } catch (error) {
             return '';
-        }    }
+        }
+    }
 
     async isElementDisplayed(element) {
         try {

@@ -8,8 +8,6 @@ module.exports = {
         searchSubmit: 1500,        // Wait after submitting search
         resultLoad: 3000,          // Wait for search results to load
         productCountMessage: 2500, // Wait for product count message to appear
-        filterApply: 500,         // Wait after applying filters
-        pageLoad: 2000             // Wait for page elements to load
     },
 
     // Test data constants - Dữ liệu test cố định
@@ -64,7 +62,11 @@ module.exports = {
         // Từ khóa tìm kiếm phụ - Alternative search keywords
         alternativeKeywords: [
             'áo', 'sơ mi', 'shirt', 'clothing', 'apparel'
-        ],
+        ],        // Category configuration - Cấu hình danh mục
+        categoryConfig: {
+            targetCategory: 'Áo',                  // Danh mục mục tiêu để test
+            allCategoriesText: 'Tất cả danh mục'   // Text cho tùy chọn "Tất cả danh mục"
+        },
 
         // Tên test cases - Test case names
         testNames: {
@@ -79,7 +81,8 @@ module.exports = {
             TK_09: 'TK_09: Sắp xếp theo giá tăng dần',
             TK_10: 'TK_10: Sắp xếp theo giá giảm dần',
             TK_11: 'TK_11: Kết hợp tìm kiếm + danh mục + giá',
-            TK_12: 'TK_12: Nhấn "Xóa Bộ Lọc" sau khi lọc'
+            TK_12: 'TK_12: Nhấn "Xóa Bộ Lọc" sau khi lọc',
+            TK_07_AllCategory: 'TK_07: Chọn lại "Tất cả danh mục" → Hiển thị toàn bộ sản phẩm'
         }
     },
 
@@ -99,9 +102,45 @@ module.exports = {
 
     // 20. Nút xóa lọc - Nút clear tất cả bộ lọc
     clearFiltersBtn: () => $('[data-testid="clear-filters"]'),
+
+    // Additional selectors for elements
+    // Category dropdown options - All option elements in category select
+    categoryOptions: () => $$('select[data-testid="category-select"] option'),
+    
+    // Product name elements - H5 elements with product names
+    productNameElements: () => $$('h5[data-testid^="product-name-"]'),
+    
+    // Product price elements - P elements with product prices  
+    productPriceElements: () => $$('p[data-testid^="product-price-"]'),
+
+    // Helper methods to get product info from a specific product card
+    async getProductNameFromCard(productCard) {
+        try {
+            const productNameElements = await productCard.$$('h5[data-testid^="product-name-"]');
+            if (productNameElements.length > 0) {
+                return await productNameElements[0].getText();
+            }
+            return '';
+        } catch (error) {
+            return '';
+        }
+    },
+
+    async getProductPriceFromCard(productCard) {
+        try {
+            const productPriceElements = await productCard.$$('p[data-testid^="product-price-"]');
+            if (productPriceElements.length > 0) {
+                return await productPriceElements[0].getText();
+            }
+            return '';
+        } catch (error) {
+            return '';
+        }
+    },
+
     searchResultItems: () => $$('.product-item, .product-card, .search-item'),
-    searchResultCount: () => $('#search-result-count, .result-count, .products-count'),    // Search results title
-    searchResultsTitle: () => $('#search-results-title, [data-testid="search-results-title"]'),    // Product card selectors - for getting all product cards
+    searchResultCount: () => $('#search-result-count, .result-count, .products-count'),    // Search results title - "Tất cả sản phẩm" text
+    searchResultsTitle: () => $('[data-testid="search-results-title"]'),// Product card selectors - for getting all product cards
     productCards: () => $$('[data-testid^="product-card-wrapper-"]'),    // Product count message - "x sản phẩm" - Based on actual HTML structure
     productCountMessage: () => $('#products-count, [data-testid="products-count"]'),
 
