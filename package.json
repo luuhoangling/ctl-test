@@ -6,6 +6,7 @@
     "test": "npx wdio wdio.conf.js",
     "login": "wdio wdio.conf.js --suite login",
     "search": "wdio wdio.conf.js --suite search",
+    "profile": "wdio wdio.conf.js --suite profile",
     "registration": "wdio wdio.conf.js --suite registration",
     "placeOrder": "wdio wdio.conf.js --suite placeOrder",
     "ctlWeb": "wdio wdio.conf.js --suite ctlWeb",

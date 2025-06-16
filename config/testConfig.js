@@ -7,6 +7,9 @@ module.exports = {
     
     // Search page path - from environment variable
     searchPath: process.env.SEARCH,
+    
+    // Profile page path - from environment variable
+    profilePath: process.env.PROFILE_PATH,
 
     // Test environment
     testEnv: process.env.TEST_ENV,
@@ -52,9 +55,7 @@ module.exports = {
         return baseUrl + loginPath;
     },    getLoginPageIdentifier() {
         return this.loginPath.replace('/', '');
-    },
-
-    getSearchUrl() {
+    },    getSearchUrl() {
         let baseUrl = this.baseUrl;
         if (!baseUrl.endsWith('/')) {
             baseUrl += '/';
@@ -64,6 +65,18 @@ module.exports = {
             searchPath = searchPath.substring(1);
         }
         return baseUrl + searchPath;
+    },
+
+    getProfileUrl() {
+        let baseUrl = this.baseUrl;
+        if (!baseUrl.endsWith('/')) {
+            baseUrl += '/';
+        }
+        let profilePath = this.profilePath;
+        if (profilePath.startsWith('/')) {
+            profilePath = profilePath.substring(1);
+        }
+        return baseUrl + profilePath;
     },
 
     getTestUserCredentials(userType = 'valid') {

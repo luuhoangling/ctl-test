@@ -4,6 +4,7 @@ const testConfig = require('./config/testConfig');
 const registration = './test/registration/registration.spec.js';
 const login = './test/login/login.spec.js';
 const search = './test/search/search.spec.js';
+const profile = './test/profile/profile.spec.js';
 const placeOrder = './test/placeOrder/placeOrder.spec.js'
 
 exports.config = {
@@ -24,14 +25,15 @@ exports.config = {
     // that will be expanded). The test for each spec file will be run in a separate
     // worker process. In order to have a group of spec files run in the same worker
     // process simply enclose them in an array within the specs array.
-    //
-    // If you are calling `wdio` from an NPM script (see https://docs.npmjs.com/cli/run-script),
-    // then the current working directory is where your `package.json` resides, so `wdio`    // will be called from there.
+    //    // If you are calling `wdio` from an NPM script (see https://docs.npmjs.com/cli/run-script),
+    // then the current working directory is where your `package.json` resides, so `wdio`
+    // will be called from there.
     //
     specs: [
         registration,
         login,
         search,
+        profile,
         placeOrder
     ],
     // Patterns to exclude.
@@ -39,30 +41,25 @@ exports.config = {
         // 'path/to/excluded/files'
     ],    suites: {
         login: [
-            [
-                login
-            ]
+            login
         ],
         search: [
-            [
-                search
-            ]
+            search
+        ],
+        profile: [
+            profile
         ],
         placeOrder: [
-            [
-                placeOrder
-            ]
+            placeOrder
         ],
         registration: [
-            [
-                registration,
-            ]
-        ], 
-        nopCommerce: [
+            registration
+        ],nopCommerce: [
             [
                 registration,
                 login,
                 search,
+                profile,
                 placeOrder
             ]
         ],
@@ -72,6 +69,7 @@ exports.config = {
                 registration,
                 login,
                 search,
+                profile,
                 placeOrder
             ]
         ]

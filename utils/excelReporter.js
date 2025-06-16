@@ -136,9 +136,26 @@ class ExcelReporter {
                         }
                     };
                 }
-            }
-        }
-    }    // Reset dữ liệu
+            }        }
+    }
+
+    // Log test result - method mới để tương thích với profile actions
+    async logTestResult(testName, status, description) {
+        const testData = {
+            testName: testName,
+            description: description,
+            status: status,
+            timestamp: new Date().toISOString(),
+            duration: 'N/A'
+        };
+        
+        this.addTestResult(testData);
+        
+        // Log to console
+        console.log(`[${status}] ${testName}: ${description}`);
+    }
+
+    // Reset dữ liệu
     reset() {
         this.testResults = [];
     }
