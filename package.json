@@ -3,12 +3,10 @@
   "version": "1.0.0",
   "description": "CTL web automation testing using webdriverio",
   "main": "index.js",  "scripts": {
-    "test": "npx wdio wdio.conf.js",
+    "test": "npx wdio wdio.conf.js",    
     "login": "wdio wdio.conf.js --suite login",
     "search": "wdio wdio.conf.js --suite search",
     "profile": "wdio wdio.conf.js --suite profile",
-    "registration": "wdio wdio.conf.js --suite registration",
-    "placeOrder": "wdio wdio.conf.js --suite placeOrder",
     "ctlWeb": "wdio wdio.conf.js --suite ctlWeb",
     "getReport": "allure generate --clean allure-results && allure open",
     "export-results": "node exportResults.js",

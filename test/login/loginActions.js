@@ -26,6 +26,20 @@ function debugLog(message) {
 }
 
 class LoginActions {
+    // Helper function để chụp screenshot kết quả cuối cùng của test case
+    async takeTestResultScreenshot(testCaseId, status = 'PASSED') {
+        try {
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const screenshotPath = `./screenshots/login/${testCaseId}_${status}_${timestamp}.png`;
+
+            await browser.saveScreenshot(screenshotPath);
+            return screenshotPath;
+        } catch (error) {
+            console.log('❌ Error taking screenshot:', error.message);
+            return null;
+        }
+    }
+
     async navigateToLogin() {
         // Navigate to login page using helper method from config
         const currentUrl = await browser.getUrl();
@@ -192,10 +206,10 @@ class LoginActions {
             // Lấy thông báo lỗi thực tế hiển thị trên màn hình
             const errorMessages = await this.getVisibleErrorMessages();
 
-            const duration = Date.now() - testStartTime;
-            const status = bothErrorsExist ? 'PASSED' : 'FAILED';
-
-            console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
+            const status = bothErrorsExist ? 'PASSED' : 'FAILED';            console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
+            
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_01', status);
 
             // Ghi kết quả vào Excel
             excelReporter.addTestResult({
@@ -209,9 +223,11 @@ class LoginActions {
 
             await expect(bothErrorsExist).to.be.true;
 
-        } catch (error) {
-            const duration = Date.now() - testStartTime;
+        } catch (error) {            const duration = Date.now() - testStartTime;
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_01', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -236,9 +252,10 @@ class LoginActions {
             // Lấy thông báo lỗi thực tế hiển thị trên màn hình
             const errorMessages = await this.getVisibleErrorMessages();
 
-            const status = usernameErrorExists ? 'PASSED' : 'FAILED';
+            const status = usernameErrorExists ? 'PASSED' : 'FAILED';            console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
-            console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_02', status);
 
             // Ghi kết quả vào Excel
             excelReporter.addTestResult({
@@ -252,8 +269,10 @@ class LoginActions {
 
             await expect(usernameErrorExists).to.be.true;
 
-        } catch (error) {
-            console.log(`❌ ${testName}: FAILED - ${error.message}`);
+        } catch (error) {            console.log(`❌ ${testName}: FAILED - ${error.message}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_02', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -278,9 +297,10 @@ class LoginActions {
             // Lấy thông báo lỗi thực tế hiển thị trên màn hình
             const errorMessages = await this.getVisibleErrorMessages();
 
-            const status = passwordErrorExists ? 'PASSED' : 'FAILED';
+            const status = passwordErrorExists ? 'PASSED' : 'FAILED';            console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
-            console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_03', status);
 
             // Ghi kết quả vào Excel
             excelReporter.addTestResult({
@@ -294,8 +314,10 @@ class LoginActions {
 
             await expect(passwordErrorExists).to.be.true;
 
-        } catch (error) {
-            console.log(`❌ ${testName}: FAILED - ${error.message}`);
+        } catch (error) {            console.log(`❌ ${testName}: FAILED - ${error.message}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_03', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -320,10 +342,11 @@ class LoginActions {
                 return loginObjects.expectedErrorMessages.invalidCredentials.some(expectedMsg =>
                     msg.includes(expectedMsg)
                 );
-            });
-
-            const status = hasLoginError ? 'PASSED' : 'FAILED';
+            });            const status = hasLoginError ? 'PASSED' : 'FAILED';
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_04', status);
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -334,10 +357,11 @@ class LoginActions {
                 actualResult: errorMessages.length > 0 ? errorMessages.join(', ') : 'Không có thông báo lỗi hiển thị'
             });
 
-            await expect(hasLoginError).to.be.true;
-
-        } catch (error) {
+            await expect(hasLoginError).to.be.true;        } catch (error) {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_04', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -364,10 +388,11 @@ class LoginActions {
                 return loginObjects.expectedErrorMessages.invalidCredentials.some(expectedMsg =>
                     msg.includes(expectedMsg)
                 );
-            });
-
-            const status = hasLoginError ? 'PASSED' : 'FAILED';
+            });            const status = hasLoginError ? 'PASSED' : 'FAILED';
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_05', status);
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -378,10 +403,11 @@ class LoginActions {
                 actualResult: errorMessages.length > 0 ? errorMessages.join(', ') : 'Không có thông báo lỗi hiển thị'
             });
 
-            await expect(hasLoginError).to.be.true;
-
-        } catch (error) {
+            await expect(hasLoginError).to.be.true;        } catch (error) {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_05', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -416,10 +442,11 @@ class LoginActions {
             if (isLoginSuccessful) {
                 const logoutSuccess = await this.logout();
                 debugLog(`Logout result: ${logoutSuccess}`);
-            }
-
-            // Lấy thông báo lỗi nếu có
+            }            // Lấy thông báo lỗi nếu có
             const errorMessages = await this.getVisibleErrorMessages();
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_06', testCaseStatus);
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -428,18 +455,19 @@ class LoginActions {
                 inputData: `Username: [${uppercaseUsername}], Password: [VALID]`,
                 expectedResult: 'Hiển thị thông báo "Tên đăng nhập hoặc mật khẩu không đúng."',
                 actualResult: isLoginSuccessful ? 'Đăng nhập thành công (không mong muốn)' : (errorMessages.length > 0 ? errorMessages.join(', ') : 'Không có thông báo lỗi hiển thị')
-            });            // Không throw error - chỉ log kết quả test case
+            });// Không throw error - chỉ log kết quả test case
             // Test suite vẫn tiếp tục chạy bình thường
 
         } catch (error) {
-            console.log(`❌ ${testName}: FAILED - ${error.message}`);
-
-            // Thử đăng xuất trong trường hợp có lỗi nhưng vẫn đăng nhập được
+            console.log(`❌ ${testName}: FAILED - ${error.message}`);            // Thử đăng xuất trong trường hợp có lỗi nhưng vẫn đăng nhập được
             try {
                 await this.logout();
             } catch (logoutError) {
                 debugLog(`Logout error: ${logoutError.message}`);
             }
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_06', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -468,10 +496,11 @@ class LoginActions {
                 return loginObjects.expectedErrorMessages.invalidCredentials.some(expectedMsg =>
                     msg.includes(expectedMsg)
                 );
-            });
-
-            const status = hasLoginError ? 'PASSED' : 'FAILED';
+            });            const status = hasLoginError ? 'PASSED' : 'FAILED';
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_07', status);
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -482,10 +511,11 @@ class LoginActions {
                 actualResult: errorMessages.length > 0 ? errorMessages.join(', ') : 'Không có thông báo lỗi hiển thị'
             });
 
-            await expect(hasLoginError).to.be.true;
-
-        } catch (error) {
+            await expect(hasLoginError).to.be.true;        } catch (error) {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_07', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -514,10 +544,11 @@ class LoginActions {
                 return loginObjects.expectedErrorMessages.invalidUsername.some(expectedMsg =>
                     msg.includes(expectedMsg)
                 );
-            });
-
-            const status = hasUsernameError ? 'PASSED' : 'FAILED';
+            });            const status = hasUsernameError ? 'PASSED' : 'FAILED';
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_08', status);
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -530,6 +561,9 @@ class LoginActions {
 
         } catch (error) {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_08', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -556,10 +590,11 @@ class LoginActions {
                 return loginObjects.expectedErrorMessages.invalidPassword.some(expectedMsg =>
                     msg.includes(expectedMsg)
                 );
-            });
-
-            const status = hasPasswordError ? 'PASSED' : 'FAILED';
+            });            const status = hasPasswordError ? 'PASSED' : 'FAILED';
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_09', status);
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -572,6 +607,9 @@ class LoginActions {
 
         } catch (error) {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_09', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -598,10 +636,11 @@ class LoginActions {
                 return loginObjects.expectedErrorMessages.invalidUsername.some(expectedMsg =>
                     msg.includes(expectedMsg)
                 );
-            });
-
-            const status = hasUsernameError ? 'PASSED' : 'FAILED';
+            });            const status = hasUsernameError ? 'PASSED' : 'FAILED';
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_10', status);
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -614,6 +653,9 @@ class LoginActions {
 
         } catch (error) {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_10', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -640,10 +682,11 @@ class LoginActions {
                 return loginObjects.expectedErrorMessages.invalidUsername.some(expectedMsg =>
                     msg.includes(expectedMsg)
                 );
-            });
-
-            const status = hasUsernameError ? 'PASSED' : 'FAILED';
+            });            const status = hasUsernameError ? 'PASSED' : 'FAILED';
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_11', status);
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -656,6 +699,9 @@ class LoginActions {
 
         } catch (error) {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_11', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -717,10 +763,11 @@ class LoginActions {
             await sleep(1000);
 
             // Kiểm tra đăng nhập thành công
-            const isLoginSuccessful = await this.verifySuccessfulLogin();
-
-            const status = isLoginSuccessful ? 'PASSED' : 'FAILED';
+            const isLoginSuccessful = await this.verifySuccessfulLogin();            const status = isLoginSuccessful ? 'PASSED' : 'FAILED';
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_12', status);
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -738,14 +785,15 @@ class LoginActions {
             }
 
         } catch (error) {
-            console.log(`❌ ${testName}: FAILED - ${error.message}`);
-
-            // Thử đăng xuất trong trường hợp có lỗi nhưng vẫn đăng nhập được
+            console.log(`❌ ${testName}: FAILED - ${error.message}`);            // Thử đăng xuất trong trường hợp có lỗi nhưng vẫn đăng nhập được
             try {
                 await this.logout();
             } catch (logoutError) {
                 debugLog(`Logout error in DN_12: ${logoutError.message}`);
             }
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_12', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -784,10 +832,11 @@ class LoginActions {
                 return loginObjects.expectedErrorMessages.accountLocked.some(expectedMsg =>
                     msg.includes(expectedMsg)
                 );
-            });
-
-            const status = hasAccountLockedError ? 'PASSED' : 'FAILED';
+            });            const status = hasAccountLockedError ? 'PASSED' : 'FAILED';
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_13', status);
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -800,6 +849,9 @@ class LoginActions {
 
         } catch (error) {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('DN_13', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,

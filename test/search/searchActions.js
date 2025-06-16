@@ -17,6 +17,20 @@ function sleep(ms) {
 
 class SearchActions {
 
+    // Helper function để chụp screenshot kết quả cuối cùng của test case
+    async takeTestResultScreenshot(testCaseId, status = 'PASSED') {
+        try {
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const screenshotPath = `./screenshots/search/${testCaseId}_${status}_${timestamp}.png`;
+
+            await browser.saveScreenshot(screenshotPath);
+            return screenshotPath;
+        } catch (error) {
+            console.log('❌ Error taking screenshot:', error.message);
+            return null;
+        }
+    }
+
     async navigateToSearchPage() {
         // Navigate to search page using config
         const searchUrl = testConfig.getSearchUrl();
@@ -81,10 +95,11 @@ class SearchActions {
             const resultCount = await searchObjects.searchResultCount();
             if (await resultCount.isDisplayed()) {
                 const countText = await resultCount.getText();
-            }
-
-            // Step 12: Log success
+            }            // Step 12: Log success
             console.log(`TK_01: tìm kiếm "${searchKeyword}" và tìm thấy "${productCount}" sản phẩm.`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('TK_01', 'PASSED');
 
             // Record test result
             excelReporter.addTestResult({
@@ -95,8 +110,10 @@ class SearchActions {
                 expectedResult: 'Hiển thị sản phẩm phù hợp',
                 actualResult: `Tìm thấy ${productCount} sản phẩm`
             });
-        } catch (error) {
-            console.log(`TK_01: tìm kiếm "${searchObjects.testData.searchKeywords.validKeyword}" và gặp lỗi "${error.message}".`);
+        } catch (error) {            console.log(`TK_01: tìm kiếm "${searchObjects.testData.searchKeywords.validKeyword}" và gặp lỗi "${error.message}".`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('TK_01', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -151,10 +168,11 @@ class SearchActions {
 
                 // Step 9: Verify no search result items exist
                 const resultItems = await searchObjects.searchResultItems();
-                const actualItemsCount = resultItems.length;
-
-                if (actualItemsCount === 0) {
+                const actualItemsCount = resultItems.length;                if (actualItemsCount === 0) {
                     console.log(`TK_02: tìm kiếm "${searchKeyword}" và tìm thấy "${productCount}" sản phẩm.`);
+
+                    // Chụp screenshot kết quả test
+                    await this.takeTestResultScreenshot('TK_02', 'PASSED');
 
                     // Record successful test result
                     excelReporter.addTestResult({
@@ -170,10 +188,12 @@ class SearchActions {
                 }
             } else {
 
-            }
-
-            // If we reach here, the test should fail
+            }            // If we reach here, the test should fail
             console.log(`TK_02: tìm kiếm "${searchKeyword}" và tìm thấy "${productCount}" sản phẩm (mong đợi 0).`);
+            
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('TK_02', 'FAILED');
+            
             excelReporter.addTestResult({
                 testName: testName,
                 description: 'Tìm kiếm với từ khóa không có kết quả',
@@ -182,8 +202,10 @@ class SearchActions {
                 expectedResult: 'Hiển thị 0 sản phẩm',
                 actualResult: `Tìm thấy ${productCount} sản phẩm`
             });
-        } catch (error) {
-            console.log(`TK_02: tìm kiếm "${searchObjects.testData.searchKeywords.invalidKeyword}" và gặp lỗi "${error.message}".`);
+        } catch (error) {            console.log(`TK_02: tìm kiếm "${searchObjects.testData.searchKeywords.invalidKeyword}" và gặp lỗi "${error.message}".`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('TK_02', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -256,10 +278,11 @@ class SearchActions {
 
             // Step 4: Compare results
             const testPassed = accentedProductCount > 0 && nonAccentedProductCount > 0 &&
-                accentedProductCount === nonAccentedProductCount;
-
-            if (testPassed) {
+                accentedProductCount === nonAccentedProductCount;            if (testPassed) {
                 console.log(`TK_03: tìm kiếm "${accentedKeyword}" (${accentedProductCount} sản phẩm) và "${nonAccentedKeyword}" (${nonAccentedProductCount} sản phẩm) - PASS`);
+
+                // Chụp screenshot kết quả test
+                await this.takeTestResultScreenshot('TK_03', 'PASSED');
 
                 // Record successful test result
                 excelReporter.addTestResult({
@@ -273,6 +296,9 @@ class SearchActions {
             } else {
                 console.log(`TK_03: tìm kiếm "${accentedKeyword}" (${accentedProductCount} sản phẩm) và "${nonAccentedKeyword}" (${nonAccentedProductCount} sản phẩm) - FAIL`);
 
+                // Chụp screenshot kết quả test
+                await this.takeTestResultScreenshot('TK_03', 'FAILED');
+
                 // Record failed test result
                 excelReporter.addTestResult({
                     testName: testName,
@@ -282,10 +308,11 @@ class SearchActions {
                     expectedResult: 'Cùng số lượng sản phẩm',
                     actualResult: `${accentedProductCount} vs ${nonAccentedProductCount} sản phẩm`
                 });
-            }
-
-        } catch (error) {
+            }        } catch (error) {
             console.log(`TK_03: gặp lỗi trong quá trình test - FAIL`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('TK_03', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -361,9 +388,10 @@ class SearchActions {
                     resultMessage = `Hiển thị "Tất Cả Sản Phẩm" với ${actualItemsCount} sản phẩm`;
                 } else {
                     resultMessage = `Hiển thị ${productCount > 0 ? productCount : actualItemsCount} sản phẩm`;
-                }
+                }                console.log(`TK_04: tìm kiếm với từ khóa rỗng - ${resultMessage} - PASS`);
 
-                console.log(`TK_04: tìm kiếm với từ khóa rỗng - ${resultMessage} - PASS`);
+                // Chụp screenshot kết quả test
+                await this.takeTestResultScreenshot('TK_04', 'PASSED');
 
                 // Record successful test result
                 excelReporter.addTestResult({
@@ -373,10 +401,11 @@ class SearchActions {
                     inputData: 'Từ khóa rỗng (không nhập gì)',
                     expectedResult: 'Hiển thị tất cả sản phẩm',
                     actualResult: resultMessage
-                });
-
-            } else {
+                });            } else {
                 console.log(`TK_04: tìm kiếm với từ khóa rỗng - Không hiển thị sản phẩm - FAIL`);
+
+                // Chụp screenshot kết quả test
+                await this.takeTestResultScreenshot('TK_04', 'FAILED');
 
                 // Record failed test result
                 excelReporter.addTestResult({
@@ -387,10 +416,11 @@ class SearchActions {
                     expectedResult: 'Hiển thị tất cả sản phẩm',
                     actualResult: `Không hiển thị sản phẩm (${actualItemsCount} items, visible: ${isResultsVisible})`
                 });
-            }
-
-        } catch (error) {
+            }        } catch (error) {
             console.log(`TK_04: gặp lỗi trong quá trình test - FAIL`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('TK_04', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -515,10 +545,11 @@ class SearchActions {
                     }
                 }
             }            // Step 9: Determine test result
-            const testPassed = validProducts > 0 && invalidProducts === 0;
-
-            if (testPassed) {
+            const testPassed = validProducts > 0 && invalidProducts === 0;            if (testPassed) {
                 console.log(`TK_05: lọc danh mục "${targetCategory}" - Tìm thấy ${productCount} sản phẩm, ${validProducts}/${actualItemsCount} sản phẩm hợp lệ - PASS`);
+
+                // Chụp screenshot kết quả test
+                await this.takeTestResultScreenshot('TK_05', 'PASSED');
 
                 // Record successful test result
                 excelReporter.addTestResult({
@@ -537,6 +568,9 @@ class SearchActions {
 
                 console.log(`TK_05: lọc danh mục "${targetCategory}" - ${failureReason} - FAIL`);
 
+                // Chụp screenshot kết quả test
+                await this.takeTestResultScreenshot('TK_05', 'FAILED');
+
                 // Record failed test result
                 excelReporter.addTestResult({
                     testName: testName,
@@ -546,10 +580,11 @@ class SearchActions {
                     expectedResult: 'Chỉ hiển thị sản phẩm trong danh mục đã chọn',
                     actualResult: `${productCount} sản phẩm: ${validProducts} hợp lệ, ${invalidProducts} không hợp lệ`
                 });
-            }
-
-        } catch (error) {
+            }        } catch (error) {
             console.log(`TK_05: gặp lỗi trong quá trình test - FAIL`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('TK_05', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -650,10 +685,11 @@ class SearchActions {
             const validPercentage = totalCheckedProducts > 0 ? (validPriceProducts / totalCheckedProducts) : 0;
 
             // Pass if at least 80% of products are within price range
-            const testPassed = productCount > 0 && itemsCount > 0 && validPercentage >= 0.8;
-
-            if (testPassed) {
+            const testPassed = productCount > 0 && itemsCount > 0 && validPercentage >= 0.8;            if (testPassed) {
                 console.log(`TK_06: lọc khoảng giá ${minPrice.toLocaleString('vi-VN')}-${maxPrice.toLocaleString('vi-VN')} VND - ${validPriceProducts}/${totalCheckedProducts} sản phẩm hợp lệ (${Math.round(validPercentage * 100)}%) - PASS`);
+
+                // Chụp screenshot kết quả test
+                await this.takeTestResultScreenshot('TK_06', 'PASSED');
 
                 // Record successful test result
                 excelReporter.addTestResult({
@@ -676,9 +712,10 @@ class SearchActions {
                     }
                 } else {
                     failureReason = 'Không đủ điều kiện pass test';
-                }
+                }                console.log(`TK_06: lọc khoảng giá ${minPrice.toLocaleString('vi-VN')}-${maxPrice.toLocaleString('vi-VN')} VND - ${failureReason} - FAIL`);
 
-                console.log(`TK_06: lọc khoảng giá ${minPrice.toLocaleString('vi-VN')}-${maxPrice.toLocaleString('vi-VN')} VND - ${failureReason} - FAIL`);
+                // Chụp screenshot kết quả test
+                await this.takeTestResultScreenshot('TK_06', 'FAILED');
 
                 // Record failed test result
                 excelReporter.addTestResult({
@@ -689,10 +726,11 @@ class SearchActions {
                     expectedResult: 'Hiển thị sản phẩm trong khoảng giá',
                     actualResult: `${productCount} sản phẩm: ${validPriceProducts} hợp lệ, ${invalidPriceProducts} không hợp lệ. ${failureReason}`
                 });
-            }
-
-        } catch (error) {
+            }        } catch (error) {
             console.log(`TK_06: gặp lỗi trong quá trình test - FAIL`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('TK_06', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -789,9 +827,10 @@ class SearchActions {
                     resultMessage = `Hiển thị "Tất Cả Sản Phẩm" với ${itemsCount} sản phẩm`;
                 } else {
                     resultMessage = `Hiển thị ${productCount > 0 ? productCount : itemsCount} sản phẩm`;
-                }
+                }                console.log(`TK_07: chọn "Tất cả danh mục" - ${resultMessage} - PASS`);
 
-                console.log(`TK_07: chọn "Tất cả danh mục" - ${resultMessage} - PASS`);
+                // Chụp screenshot kết quả test
+                await this.takeTestResultScreenshot('TK_07_AllCategory', 'PASSED');
 
                 // Record successful test result
                 excelReporter.addTestResult({
@@ -801,10 +840,11 @@ class SearchActions {
                     inputData: 'Chuyển từ "Quần" → "Tất cả danh mục"',
                     expectedResult: 'Hiển thị tất cả sản phẩm',
                     actualResult: resultMessage
-                });
-
-            } else {
+                });            } else {
                 console.log(`TK_07: chọn "Tất cả danh mục" - Không hiển thị sản phẩm - FAIL`);
+
+                // Chụp screenshot kết quả test
+                await this.takeTestResultScreenshot('TK_07_AllCategory', 'FAILED');
 
                 // Record failed test result
                 excelReporter.addTestResult({
@@ -819,6 +859,9 @@ class SearchActions {
 
         } catch (error) {
             console.log(`TK_07: gặp lỗi trong quá trình test - FAIL`);
+
+            // Chụp screenshot kết quả test
+            await this.takeTestResultScreenshot('TK_07_AllCategory', 'FAILED');
 
             excelReporter.addTestResult({
                 testName: testName,
@@ -928,9 +971,7 @@ class SearchActions {
             console.log(`TK_07: Kết quả kiểm tra:`);
             console.log(`- Thông báo validation: ${isValidationVisible ? `"${errorMessage}"` : 'Không hiển thị'}`);
             console.log(`- Filter có thể áp dụng: ${filterApplied ? 'Có' : 'Không'}`);
-            console.log(`- Số sản phẩm tìm thấy: ${productCount}`);
-
-            // Test passes if exact validation message is shown
+            console.log(`- Số sản phẩm tìm thấy: ${productCount}`);            // Test passes if exact validation message is shown
             if (isValidationVisible && errorMessage === expectedErrorMessage) {
                 console.log(`TK_07: Hiển thị đúng thông báo validation - PASS`);
 
@@ -942,6 +983,9 @@ class SearchActions {
                     expectedResult: `Hiển thị thông báo: "${expectedErrorMessage}" tại [data-testid="price-validation-error"]`,
                     actualResult: `Thông báo validation: "${errorMessage}"`
                 });
+
+                // Chụp ảnh kết quả PASSED
+                await this.takeTestResultScreenshot('TK_07_InvalidPriceRange', 'PASSED');
 
             } else {
                 console.log(`TK_07: Không hiển thị đúng thông báo validation - FAIL`);
@@ -955,9 +999,7 @@ class SearchActions {
 
                 if (filterApplied && productCount > 0) {
                     actualResult += `, vẫn tìm được ${productCount} sản phẩm`;
-                }
-
-                excelReporter.addTestResult({
+                }                excelReporter.addTestResult({
                     testName: testName,
                     description: 'Kiểm tra validation khoảng giá không hợp lệ (min > max)',
                     status: 'FAILED',
@@ -965,10 +1007,14 @@ class SearchActions {
                     expectedResult: `Hiển thị thông báo: "${expectedErrorMessage}" tại [data-testid="price-validation-error"]`,
                     actualResult: actualResult
                 });
+
+                // Chụp ảnh kết quả FAILED
+                await this.takeTestResultScreenshot('TK_07_InvalidPriceRange', 'FAILED');
             }
 
-        } catch (error) {
-            console.log(`TK_07: gặp lỗi trong quá trình test - ERROR: ${error.message}`); excelReporter.addTestResult({
+        } catch (error) {            console.log(`TK_07: gặp lỗi trong quá trình test - ERROR: ${error.message}`); 
+            
+            excelReporter.addTestResult({
                 testName: testName,
                 description: 'Kiểm tra validation khoảng giá không hợp lệ (min > max)',
                 status: 'ERROR',
@@ -976,6 +1022,9 @@ class SearchActions {
                 expectedResult: `Hiển thị thông báo: "Giá tối thiểu không thể lớn hơn giá tối đa" tại [data-testid="price-validation-error"]`,
                 actualResult: `Lỗi trong quá trình test: ${error.message}`
             });
+
+            // Chụp ảnh kết quả ERROR
+            await this.takeTestResultScreenshot('TK_07_InvalidPriceRange', 'FAILED');
         }
     }    // TK_08: Nhập chữ vào ô giá → Set ô giá về 0 (nó tự động làm rỗng giá trị của ô nếu nhập chữ)
     async TK_08_InvalidTextInPriceInput() {
@@ -1017,9 +1066,7 @@ class SearchActions {
             const isMinInputCleared = !minInputValue || minInputValue === '0' || minInputValue.trim() === '';
             const isMaxInputCleared = !maxInputValue || maxInputValue === '0' || maxInputValue.trim() === '';
 
-            const testPassed = isMinInputCleared && isMaxInputCleared;
-
-            if (testPassed) {
+            const testPassed = isMinInputCleared && isMaxInputCleared;            if (testPassed) {
                 console.log(`TK_08: Nhập text vào ô giá - Hệ thống tự động xóa/reset về 0 - PASS`);
 
                 excelReporter.addTestResult({
@@ -1031,10 +1078,11 @@ class SearchActions {
                     actualResult: `Min: "${minInputValue}", Max: "${maxInputValue}" - Hệ thống xử lý đúng`
                 });
 
-            } else {
-                console.log(`TK_08: Nhập text vào ô giá - Hệ thống không xử lý đúng - FAIL`);
+                // Chụp ảnh kết quả PASSED
+                await this.takeTestResultScreenshot('TK_08_InvalidTextInPriceInput', 'PASSED');
 
-                excelReporter.addTestResult({
+            } else {
+                console.log(`TK_08: Nhập text vào ô giá - Hệ thống không xử lý đúng - FAIL`);                excelReporter.addTestResult({
                     testName: testName,
                     description: 'Kiểm tra xử lý input text trong ô giá',
                     status: 'FAILED',
@@ -1042,12 +1090,13 @@ class SearchActions {
                     expectedResult: 'Ô giá tự động xóa/reset về 0 khi nhập text',
                     actualResult: `Min: "${minInputValue}", Max: "${maxInputValue}" - Vẫn chứa text`
                 });
+
+                // Chụp ảnh kết quả FAILED
+                await this.takeTestResultScreenshot('TK_08_InvalidTextInPriceInput', 'FAILED');
             }
 
         } catch (error) {
-            console.log(`TK_08: gặp lỗi trong quá trình test - ERROR: ${error.message}`);
-
-            excelReporter.addTestResult({
+            console.log(`TK_08: gặp lỗi trong quá trình test - ERROR: ${error.message}`);            excelReporter.addTestResult({
                 testName: testName,
                 description: 'Kiểm tra xử lý input text trong ô giá',
                 status: 'ERROR',
@@ -1055,6 +1104,9 @@ class SearchActions {
                 expectedResult: 'Ô giá tự động xóa/reset về 0 khi nhập text',
                 actualResult: `Lỗi trong quá trình test: ${error.message}`
             });
+
+            // Chụp ảnh kết quả ERROR
+            await this.takeTestResultScreenshot('TK_08_InvalidTextInPriceInput', 'FAILED');
         }
     }
     // TK_09: Sắp xếp theo giá tăng dần → Sản phẩm hiển thị từ giá thấp đến cao
@@ -1155,9 +1207,7 @@ class SearchActions {
             }
 
             console.log(`TK_09: Kiểm tra ${prices.length} sản phẩm đầu tiên`);
-            console.log(`TK_09: Giá sản phẩm: ${priceDetails.join(' → ')}`);
-
-            if (isAscending && prices.length >= 2) {
+            console.log(`TK_09: Giá sản phẩm: ${priceDetails.join(' → ')}`);            if (isAscending && prices.length >= 2) {
                 console.log(`TK_09: Sắp xếp theo giá tăng dần - Đúng thứ tự - PASS`);
 
                 excelReporter.addTestResult({
@@ -1169,10 +1219,11 @@ class SearchActions {
                     actualResult: `${prices.length} sản phẩm theo thứ tự đúng: ${priceDetails.slice(0, 3).join(' → ')}${priceDetails.length > 3 ? '...' : ''}`
                 });
 
-            } else {
-                console.log(`TK_09: Sắp xếp theo giá tăng dần - Không đúng thứ tự - FAIL`);
+                // Chụp ảnh kết quả PASSED
+                await this.takeTestResultScreenshot('TK_09_SortByPriceAscending', 'PASSED');
 
-                excelReporter.addTestResult({
+            } else {
+                console.log(`TK_09: Sắp xếp theo giá tăng dần - Không đúng thứ tự - FAIL`);                excelReporter.addTestResult({
                     testName: testName,
                     description: 'Sắp xếp sản phẩm theo giá từ thấp đến cao',
                     status: 'FAILED',
@@ -1180,12 +1231,13 @@ class SearchActions {
                     expectedResult: 'Sản phẩm hiển thị từ giá thấp đến cao',
                     actualResult: `${prices.length} sản phẩm không đúng thứ tự: ${priceDetails.join(' → ')}`
                 });
+
+                // Chụp ảnh kết quả FAILED
+                await this.takeTestResultScreenshot('TK_09_SortByPriceAscending', 'FAILED');
             }
 
         } catch (error) {
-            console.log(`TK_09: gặp lỗi trong quá trình test - ERROR: ${error.message}`);
-
-            excelReporter.addTestResult({
+            console.log(`TK_09: gặp lỗi trong quá trình test - ERROR: ${error.message}`);            excelReporter.addTestResult({
                 testName: testName,
                 description: 'Sắp xếp sản phẩm theo giá từ thấp đến cao',
                 status: 'ERROR',
@@ -1193,6 +1245,9 @@ class SearchActions {
                 expectedResult: 'Sản phẩm hiển thị từ giá thấp đến cao',
                 actualResult: `Lỗi trong quá trình test: ${error.message}`
             });
+
+            // Chụp ảnh kết quả ERROR
+            await this.takeTestResultScreenshot('TK_09_SortByPriceAscending', 'FAILED');
         }
     }
     // TK_10: Sắp xếp theo giá giảm dần → Sản phẩm hiển thị từ giá cao đến thấp
@@ -1295,9 +1350,7 @@ class SearchActions {
             }
 
             console.log(`TK_10: Kiểm tra ${prices.length} sản phẩm đầu tiên`);
-            console.log(`TK_10: Giá sản phẩm: ${priceDetails.join(' → ')}`);
-
-            if (isDescending && prices.length >= 2) {
+            console.log(`TK_10: Giá sản phẩm: ${priceDetails.join(' → ')}`);            if (isDescending && prices.length >= 2) {
                 console.log(`TK_10: Sắp xếp theo giá giảm dần - Đúng thứ tự - PASS`);
 
                 excelReporter.addTestResult({
@@ -1309,10 +1362,11 @@ class SearchActions {
                     actualResult: `${prices.length} sản phẩm theo thứ tự đúng: ${priceDetails.slice(0, 3).join(' → ')}${priceDetails.length > 3 ? '...' : ''}`
                 });
 
-            } else {
-                console.log(`TK_10: Sắp xếp theo giá giảm dần - Không đúng thứ tự - FAIL`);
+                // Chụp ảnh kết quả PASSED
+                await this.takeTestResultScreenshot('TK_10_SortByPriceDescending', 'PASSED');
 
-                excelReporter.addTestResult({
+            } else {
+                console.log(`TK_10: Sắp xếp theo giá giảm dần - Không đúng thứ tự - FAIL`);                excelReporter.addTestResult({
                     testName: testName,
                     description: 'Sắp xếp sản phẩm theo giá từ cao đến thấp',
                     status: 'FAILED',
@@ -1320,12 +1374,13 @@ class SearchActions {
                     expectedResult: 'Sản phẩm hiển thị từ giá cao đến thấp',
                     actualResult: `${prices.length} sản phẩm không đúng thứ tự: ${priceDetails.join(' → ')}`
                 });
+
+                // Chụp ảnh kết quả FAILED
+                await this.takeTestResultScreenshot('TK_10_SortByPriceDescending', 'FAILED');
             }
 
         } catch (error) {
-            console.log(`TK_10: gặp lỗi trong quá trình test - ERROR: ${error.message}`);
-
-            excelReporter.addTestResult({
+            console.log(`TK_10: gặp lỗi trong quá trình test - ERROR: ${error.message}`);            excelReporter.addTestResult({
                 testName: testName,
                 description: 'Sắp xếp sản phẩm theo giá từ cao đến thấp',
                 status: 'ERROR',
@@ -1333,6 +1388,9 @@ class SearchActions {
                 expectedResult: 'Sản phẩm hiển thị từ giá cao đến thấp',
                 actualResult: `Lỗi trong quá trình test: ${error.message}`
             });
+
+            // Chụp ảnh kết quả ERROR
+            await this.takeTestResultScreenshot('TK_10_SortByPriceDescending', 'FAILED');
         }
     }
     // TK_11: Kết hợp tìm kiếm + danh mục + giá → Kết quả chính xác theo tất cả điều kiện
@@ -1476,9 +1534,7 @@ class SearchActions {
             console.log(`TK_11: Sắp xếp giá đúng: ${priceOrderCorrect ? 'Có' : 'Không'}`);
 
             // Step 9: Determine test result
-            const testPassed = productCount > 0 && keywordMatches >= Math.min(productCards.length, 2) && priceOrderCorrect;
-
-            if (testPassed) {
+            const testPassed = productCount > 0 && keywordMatches >= Math.min(productCards.length, 2) && priceOrderCorrect;            if (testPassed) {
                 console.log(`TK_11: Tìm kiếm kết hợp - Kết quả chính xác - PASS`);
 
                 excelReporter.addTestResult({
@@ -1490,10 +1546,11 @@ class SearchActions {
                     actualResult: `${productCount} sản phẩm, ${keywordMatches} chứa từ khóa, sắp xếp đúng: ${priceOrderCorrect}`
                 });
 
-            } else {
-                console.log(`TK_11: Tìm kiếm kết hợp - Kết quả không chính xác - FAIL`);
+                // Chụp ảnh kết quả PASSED
+                await this.takeTestResultScreenshot('TK_11_CombinedSearch', 'PASSED');
 
-                excelReporter.addTestResult({
+            } else {
+                console.log(`TK_11: Tìm kiếm kết hợp - Kết quả không chính xác - FAIL`);                excelReporter.addTestResult({
                     testName: testName,
                     description: 'Kết hợp tìm kiếm từ khóa + danh mục + sắp xếp',
                     status: 'FAILED',
@@ -1501,12 +1558,13 @@ class SearchActions {
                     expectedResult: 'Kết quả chính xác theo tất cả điều kiện',
                     actualResult: `${productCount} sản phẩm, ${keywordMatches} chứa từ khóa, sắp xếp đúng: ${priceOrderCorrect}`
                 });
+
+                // Chụp ảnh kết quả FAILED
+                await this.takeTestResultScreenshot('TK_11_CombinedSearch', 'FAILED');
             }
 
         } catch (error) {
-            console.log(`TK_11: gặp lỗi trong quá trình test - ERROR: ${error.message}`);
-
-            excelReporter.addTestResult({
+            console.log(`TK_11: gặp lỗi trong quá trình test - ERROR: ${error.message}`);            excelReporter.addTestResult({
                 testName: testName,
                 description: 'Kết hợp tìm kiếm từ khóa + danh mục + sắp xếp',
                 status: 'ERROR',
@@ -1514,6 +1572,9 @@ class SearchActions {
                 expectedResult: 'Kết quả chính xác theo tất cả điều kiện',
                 actualResult: `Lỗi trong quá trình test: ${error.message}`
             });
+
+            // Chụp ảnh kết quả ERROR
+            await this.takeTestResultScreenshot('TK_11_CombinedSearch', 'FAILED');
         }
     }
     // TK_12: Nhấn "Xóa Bộ Lọc" sau khi lọc → Trả về trạng thái mặc định, hiển thị toàn bộ sản phẩm
@@ -1583,9 +1644,7 @@ class SearchActions {
             const hasMoreProducts = clearedProductCount >= filteredProductCount;
             const hasSignificantIncrease = clearedProductCount > filteredProductCount * 1.5; // At least 50% more products
 
-            const testPassed = isSearchCleared && isCategoryReset && (hasMoreProducts || clearedProductCount > 10);
-
-            if (testPassed) {
+            const testPassed = isSearchCleared && isCategoryReset && (hasMoreProducts || clearedProductCount > 10);            if (testPassed) {
                 console.log(`TK_12: Xóa bộ lọc - Trả về trạng thái mặc định - PASS`);
 
                 excelReporter.addTestResult({
@@ -1597,15 +1656,16 @@ class SearchActions {
                     actualResult: `Form đã reset (search: "${searchValue}", category: "${categoryValue}"), sản phẩm: ${filteredProductCount} → ${clearedProductCount}`
                 });
 
+                // Chụp ảnh kết quả PASSED
+                await this.takeTestResultScreenshot('TK_12_ClearFilters', 'PASSED');
+
             } else {
                 console.log(`TK_12: Xóa bộ lọc - Không trả về trạng thái mặc định - FAIL`);
 
                 let failureReason = '';
                 if (!isSearchCleared) failureReason += 'Từ khóa chưa xóa; ';
                 if (!isCategoryReset) failureReason += 'Danh mục chưa reset; ';
-                if (!hasMoreProducts) failureReason += 'Số sản phẩm không tăng; ';
-
-                excelReporter.addTestResult({
+                if (!hasMoreProducts) failureReason += 'Số sản phẩm không tăng; ';                excelReporter.addTestResult({
                     testName: testName,
                     description: 'Xóa tất cả bộ lọc và trả về trạng thái mặc định',
                     status: 'FAILED',
@@ -1613,12 +1673,13 @@ class SearchActions {
                     expectedResult: 'Form reset, hiển thị toàn bộ sản phẩm',
                     actualResult: `${failureReason}Sản phẩm: ${filteredProductCount} → ${clearedProductCount}`
                 });
+
+                // Chụp ảnh kết quả FAILED
+                await this.takeTestResultScreenshot('TK_12_ClearFilters', 'FAILED');
             }
 
         } catch (error) {
-            console.log(`TK_12: gặp lỗi trong quá trình test - ERROR: ${error.message}`);
-
-            excelReporter.addTestResult({
+            console.log(`TK_12: gặp lỗi trong quá trình test - ERROR: ${error.message}`);            excelReporter.addTestResult({
                 testName: testName,
                 description: 'Xóa tất cả bộ lọc và trả về trạng thái mặc định',
                 status: 'ERROR',
@@ -1626,6 +1687,9 @@ class SearchActions {
                 expectedResult: 'Form reset, hiển thị toàn bộ sản phẩm',
                 actualResult: `Lỗi trong quá trình test: ${error.message}`
             });
+
+            // Chụp ảnh kết quả ERROR
+            await this.takeTestResultScreenshot('TK_12_ClearFilters', 'FAILED');
         }
     }
 

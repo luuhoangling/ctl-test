@@ -44,7 +44,7 @@ class ExcelReporter {
                     .replace(/[:.]/g, '-')
                     .replace('T', '_')
                     .split('.')[0];
-                fileName = `test-results_${timestamp}.xlsx`;
+                fileName = `login_test_result.xlsx`;
             }
 
             if (!fileName.endsWith('.xlsx')) {
