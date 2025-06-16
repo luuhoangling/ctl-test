@@ -2,7 +2,7 @@ const testConfig = require('../../config/testConfig');
 
 module.exports = {
     waitTimes: testConfig.waitTimes,
-    
+
     // Specific wait times for profile operations
     profileWaitTimes: {
         formLoad: 2000,              // Wait for profile form to load
@@ -28,23 +28,26 @@ module.exports = {
             emptyFullname: '',
             invalidEmail: 'invalid-email',
             emptyEmail: '',
+            usedEmail: "dm.phuong@hehe.com",
             wrongCurrentPassword: 'wrongpassword',
             shortNewPassword: '123',
             mismatchConfirmPassword: 'differentpassword',
             specialCharacters: '<script>alert("test")</script>',
             longText: 'A'.repeat(256) // Text quá dài
-        },
-
+        },        
         // Thông báo lỗi mong đợi - Expected error messages
         errorMessages: {
             emptyFullname: 'Họ và tên không được để trống',
             invalidEmail: 'Email không đúng định dạng',
             emptyEmail: 'Email không được để trống',
             wrongCurrentPassword: 'Mật khẩu hiện tại không đúng',
-            shortPassword: 'Mật khẩu phải có ít nhất 6 ký tự',
-            passwordMismatch: 'Xác nhận mật khẩu không khớp',
+            shortPassword: 'Mật khẩu mới phải có ít nhất 6 ký tự.',
+            passwordMismatch: 'Mật khẩu xác nhận không khớp với mật khẩu mới.',
             updateSuccess: 'Cập nhật thông tin thành công',
-            passwordUpdateSuccess: 'Đổi mật khẩu thành công'
+            passwordUpdateSuccess: 'Đổi mật khẩu thành công',            // Thêm các error messages cho test cases mới
+            invalidEmailFormat: 'Email không hợp lệ',
+            existingEmail: 'Email này đã được sử dụng bởi tài khoản khác.',
+            emptyConfirmPassword: 'Xác nhận mật khẩu không được để trống'
         },
 
         // Validation rules - Quy tắc validation
@@ -55,29 +58,10 @@ module.exports = {
             waitForValidation: 1000,
             formTimeout: 10000
         },
-
-        // Tên test cases - Test case names
-        testNames: {
-            PROFILE_01: 'PROFILE_01: Kiểm tra cập nhật thông tin với dữ liệu hợp lệ',
-            PROFILE_02: 'PROFILE_02: Kiểm tra cập nhật với họ tên để trống',
-            PROFILE_03: 'PROFILE_03: Kiểm tra cập nhật với email không hợp lệ',
-            PROFILE_04: 'PROFILE_04: Kiểm tra cập nhật với email để trống',
-            PROFILE_05: 'PROFILE_05: Kiểm tra đổi mật khẩu với mật khẩu hiện tại sai',
-            PROFILE_06: 'PROFILE_06: Kiểm tra đổi mật khẩu với mật khẩu mới quá ngắn',
-            PROFILE_07: 'PROFILE_07: Kiểm tra đổi mật khẩu với xác nhận mật khẩu không khớp',
-            PROFILE_08: 'PROFILE_08: Kiểm tra hủy bỏ thay đổi thông tin',
-            PROFILE_09: 'PROFILE_09: Kiểm tra validation client-side',
-            PROFILE_10: 'PROFILE_10: Kiểm tra bảo mật XSS với ký tự đặc biệt'
-        }
     },
 
     // Form Container - Thẻ form chính
-    profileForm: () => $('[data-testid="profile-form"]'),
-
-    // Form Fields - Các trường nhập liệu
-    // Tên đăng nhập (disabled field)
-    usernameField: () => $('[data-testid="username-field"]'),
-
+    profileForm: () => $('[data-testid="profile-form"]'),    // Form Fields - Các trường nhập liệu
     // Họ và tên (required)
     fullnameField: () => $('[data-testid="fullname-field"]'),
 
@@ -94,20 +78,12 @@ module.exports = {
     confirmPasswordField: () => $('[data-testid="confirm-password-field"]'),
 
     // Buttons - Các nút bấm
-    // Nút Hủy
     cancelButton: () => $('[data-testid="cancel-button"]'),
 
     // Nút Cập Nhật
     submitButton: () => $('[data-testid="submit-button"]'),
 
-    // Message Elements - Các phần tử thông báo
-    // Validation summary container
-    validationSummary: () => $('[data-testid="validation-summary"]'),
-
-    // Validation errors list
-    validationErrors: () => $('[data-testid="validation-errors"]'),
-
-    // Server error message (PHP)
+    // Message Elements - Các phần tử thông báo    // Server error message (PHP)
     errorMessage: () => $('[data-testid="error-message"]'),
 
     // Server success message (PHP)
@@ -118,28 +94,11 @@ module.exports = {
     fullnameError: () => $('[data-testid="full_name-error"]'),
 
     // Lỗi email
-    emailError: () => $('[data-testid="email-error"]'),
-
-    // Lỗi mật khẩu hiện tại
+    emailError: () => $('[data-testid="email-error"]'),    // Lỗi mật khẩu hiện tại
     currentPasswordError: () => $('[data-testid="current_password-error"]'),
 
-    // Lỗi mật khẩu mới
-    newPasswordError: () => $('[data-testid="new_password-error"]'),
-
     // Lỗi xác nhận mật khẩu
-    confirmPasswordError: () => $('[data-testid="confirm_password-error"]'),
-
-    // Helper methods - Các phương thức hỗ trợ
-    
-    // Kiểm tra xem form có được hiển thị không
-    async isFormDisplayed() {
-        try {
-            const form = await this.profileForm();
-            return await form.isDisplayed();
-        } catch (error) {
-            return false;
-        }
-    },
+    confirmPasswordError: () => $('[data-testid="confirm_password-error"]'),    // Helper methods - Các phương thức hỗ trợ
 
     // Lấy text của thông báo lỗi
     async getErrorMessage(errorSelector) {
@@ -167,31 +126,23 @@ module.exports = {
         }
     },
 
-    // Kiểm tra xem field có bị disable không
-    async isFieldDisabled(fieldSelector) {
-        try {
-            const field = await fieldSelector();
-            return await field.getAttribute('disabled') !== null;
-        } catch (error) {
-            return false;
-        }
-    },
-
-    // Lấy giá trị của field
-    async getFieldValue(fieldSelector) {
-        try {
-            const field = await fieldSelector();
-            return await field.getValue();
-        } catch (error) {
-            return '';
-        }
-    },
-
     // Kiểm tra xem có thông báo validation nào hiển thị không
     async hasValidationErrors() {
         try {
-            const validationSummary = await this.validationSummary();
-            return await validationSummary.isDisplayed();
+            const errorSelectors = [
+                this.fullnameError,
+                this.emailError,
+                this.currentPasswordError,
+                this.confirmPasswordError
+            ];
+
+            for (const errorSelector of errorSelectors) {
+                const errorElement = await errorSelector();
+                if (await errorElement.isDisplayed()) {
+                    return true;
+                }
+            }
+            return false;
         } catch (error) {
             return false;
         }
