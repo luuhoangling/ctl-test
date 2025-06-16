@@ -3,6 +3,7 @@ const loginObjects = require('../login/loginObjects');
 const testConfig = require('../../config/testConfig');
 const expect = require("chai").expect;
 const ExcelReporter = require('../../utils/excelReporter');
+const ScreenshotUtils = require('../../utils/screenshotUtils');
 
 // Tạo instance của ExcelReporter
 const excelReporter = new ExcelReporter();
@@ -181,20 +182,24 @@ class ProfileActions {
             return successMessage.length > 0;
         } catch (error) {
             return false;
-        }
-    }// Helper function để chụp screenshot kết quả cuối cùng của test case
+        }    }
+      // Helper function để chụp screenshot kết quả cuối cùng của test case
+    // Sẽ tự động clear ảnh cũ chỉ 1 lần duy nhất cho toàn bộ test suite
     async takeTestResultScreenshot(testCaseId, status = 'PASSED') {
-        try {
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const screenshotPath = `./screenshots/profile/${testCaseId}_${status}_${timestamp}.png`;
+        return await ScreenshotUtils.takeTestResultScreenshot('profile', testCaseId, status, true);
+    }
 
-            await browser.saveScreenshot(screenshotPath);
-            return screenshotPath;
-        } catch (error) {
-            console.log('❌ Error taking screenshot:', error.message);
-            return null;
-        }
-    }// TT_01: Kiểm tra hiển thị lỗi yêu cầu nhập đầy đủ khi bỏ trống các trường bắt buộc
+    // Clear all old screenshots in profile folder (force clear)
+    async clearOldScreenshots(force = false) {
+        await ScreenshotUtils.clearModuleScreenshots('profile', force);
+    }
+
+    // Reset clearing session - gọi method này khi bắt đầu test suite mới
+    resetScreenshotSession() {
+        ScreenshotUtils.resetSession();
+    }
+    
+    // TT_01: Kiểm tra hiển thị lỗi yêu cầu nhập đầy đủ khi bỏ trống các trường bắt buộc
     async TT_01_EmptyRequiredFields() {
         try {
             // Đăng nhập và navigate tới profile page

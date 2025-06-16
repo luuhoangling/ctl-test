@@ -2,6 +2,7 @@ const loginObjects = require('./loginObjects');
 const testConfig = require('../../config/testConfig');
 const expect = require("chai").expect;
 const ExcelReporter = require('../../utils/excelReporter');
+const ScreenshotUtils = require('../../utils/screenshotUtils');
 
 // Tạo instance của ExcelReporter
 const excelReporter = new ExcelReporter();
@@ -27,17 +28,19 @@ function debugLog(message) {
 
 class LoginActions {
     // Helper function để chụp screenshot kết quả cuối cùng của test case
+    // Sẽ tự động clear ảnh cũ chỉ 1 lần duy nhất cho toàn bộ test suite
     async takeTestResultScreenshot(testCaseId, status = 'PASSED') {
-        try {
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const screenshotPath = `./screenshots/login/${testCaseId}_${status}_${timestamp}.png`;
+        return await ScreenshotUtils.takeTestResultScreenshot('login', testCaseId, status, true);
+    }
 
-            await browser.saveScreenshot(screenshotPath);
-            return screenshotPath;
-        } catch (error) {
-            console.log('❌ Error taking screenshot:', error.message);
-            return null;
-        }
+    // Clear all old screenshots in login folder (force clear)
+    async clearOldScreenshots(force = false) {
+        await ScreenshotUtils.clearModuleScreenshots('login', force);
+    }
+
+    // Reset clearing session - gọi method này khi bắt đầu test suite mới
+    resetScreenshotSession() {
+        ScreenshotUtils.resetSession();
     }
 
     async navigateToLogin() {
