@@ -1,4 +1,5 @@
 require('dotenv').config();
+const loginObjects = require('../test/login/loginObjects');
 
 module.exports = {
     // Base URL for the CTL web application - from environment variable
@@ -16,30 +17,25 @@ module.exports = {
 
     // Common timeouts - from environment variables
     defaultTimeout: parseInt(process.env.DEFAULT_TIMEOUT),
-    loginTimeout: parseInt(process.env.LOGIN_TIMEOUT),
-
-    // Browser settings
+    loginTimeout: parseInt(process.env.LOGIN_TIMEOUT),    // Browser settings
     browser: process.env.BROWSER,
     headless: process.env.HEADLESS === 'true',
 
-    // Debug settings
-    debugMode: process.env.DEBUG_MODE === 'true',    // Wait times for various operations
+    // Wait times for various operations
     waitTimes: {
         defaultWait: parseInt(process.env.DEFAULT_WAIT) || 500,
         submitWait: parseInt(process.env.SUBMIT_WAIT) || 1000,
         afterLoginWait: parseInt(process.env.AFTER_LOGIN_WAIT) || 2000,
         elementWait: parseInt(process.env.ELEMENT_WAIT_TIMEOUT) || 5000,
         redirectWait: parseInt(process.env.REDIRECT_WAIT_TIMEOUT) || 10000
-    },
-
-    testUsers: {
+    },    testUsers: {
         validUser: {
-            username: process.env.VALID_USERNAME,
-            password: process.env.VALID_PASSWORD
+            username: loginObjects.credentials.valid.username,
+            password: loginObjects.credentials.valid.password
         },
         invalidUser: {
-            username: process.env.INVALID_USERNAME,
-            password: process.env.INVALID_PASSWORD
+            username: loginObjects.credentials.invalid.username,
+            password: loginObjects.credentials.invalid.password
         }
     },
 
@@ -77,14 +73,8 @@ module.exports = {
             profilePath = profilePath.substring(1);
         }
         return baseUrl + profilePath;
-    },
-
-    getTestUserCredentials(userType = 'valid') {
+    },    getTestUserCredentials(userType = 'valid') {
         return userType === 'valid' ? this.testUsers.validUser : this.testUsers.invalidUser;
-    },
-
-    isDebugMode() {
-        return this.debugMode;
     },
 
     getBrowserConfig() {

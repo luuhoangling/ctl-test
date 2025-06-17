@@ -1,6 +1,6 @@
 const searchActions = require('./searchActions');
 
-describe('Tìm kiếm và Lọc sản phẩm - Test Cases', () => {    // TK_01: Kiểm tra tìm kiếm với từ khóa hợp lệ
+describe('Tìm kiếm và Lọc sản phẩm', () => {    // TK_01: Kiểm tra tìm kiếm với từ khóa hợp lệ
     it("TK_01: Kiểm tra tìm kiếm với từ khóa hợp lệ", async () => {
         await searchActions.TK_01_ValidKeywordSearch();
     });

@@ -21,43 +21,23 @@ module.exports = {
             currentPassword: 'password123',
             newPassword: 'newpassword123',
             confirmPassword: 'newpassword123'
-        },
-
-        // Thông tin người dùng không hợp lệ - Invalid user information
+        },        // Thông tin người dùng không hợp lệ - Invalid user information
         invalidUserInfo: {
-            emptyFullname: '',
             invalidEmail: 'invalid-email',
-            emptyEmail: '',
             usedEmail: "dm.phuong@hehe.com",
             wrongCurrentPassword: 'wrongpassword',
             shortNewPassword: '123',
-            mismatchConfirmPassword: 'differentpassword',
-            specialCharacters: '<script>alert("test")</script>',
-            longText: 'A'.repeat(256) // Text quá dài
-        },        
-        // Thông báo lỗi mong đợi - Expected error messages
+            mismatchConfirmPassword: 'differentpassword'
+        },        // Thông báo lỗi mong đợi - Expected error messages
         errorMessages: {
-            emptyFullname: 'Họ và tên không được để trống',
-            invalidEmail: 'Email không đúng định dạng',
-            emptyEmail: 'Email không được để trống',
             wrongCurrentPassword: 'Mật khẩu hiện tại không đúng',
             shortPassword: 'Mật khẩu mới phải có ít nhất 6 ký tự.',
             passwordMismatch: 'Mật khẩu xác nhận không khớp với mật khẩu mới.',
             updateSuccess: 'Cập nhật thông tin thành công',
-            passwordUpdateSuccess: 'Đổi mật khẩu thành công',            // Thêm các error messages cho test cases mới
+            passwordUpdateSuccess: 'Đổi mật khẩu thành công',
             invalidEmailFormat: 'Email không hợp lệ',
-            existingEmail: 'Email này đã được sử dụng bởi tài khoản khác.',
-            emptyConfirmPassword: 'Xác nhận mật khẩu không được để trống'
-        },
-
-        // Validation rules - Quy tắc validation
-        validation: {
-            minPasswordLength: 6,
-            maxFieldLength: 255,
-            emailPattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            waitForValidation: 1000,
-            formTimeout: 10000
-        },
+            existingEmail: 'Email này đã được sử dụng bởi tài khoản khác.'
+        }
     },
 
     // Form Container - Thẻ form chính

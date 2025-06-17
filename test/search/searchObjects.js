@@ -1,24 +1,30 @@
 const testConfig = require('../../config/testConfig');
 
-module.exports = {
-    waitTimes: testConfig.waitTimes,
-    
-    // Specific wait times for search operations
+module.exports = {    // Consolidated wait times object - All timing configurations in one place
+    waitTimes: {
+        // Basic wait times
+        defaultWait: 500,                      // Default wait time
+        
+        // Search-specific wait times
+        searchSubmit: 1500,                    // Wait after submitting search
+        resultLoad: 3000,                      // Wait for search results to load
+        productCountMessage: 2500,             // Wait for product count message to appear
+        
+        // Legacy support - keeping old structure for backward compatibility
+        medium: 1500                           // Medium wait time
+    },    
+    // Keep legacy searchWaitTimes for backward compatibility
     searchWaitTimes: {
         searchSubmit: 1500,        // Wait after submitting search
-        resultLoad: 3000,          // Wait for search results to load
-        productCountMessage: 2500, // Wait for product count message to appear
     },
 
     // Test data constants - Dữ liệu test cố định
-    testData: {
-        // Từ khóa tìm kiếm - Search keywords
+    testData: {        // Từ khóa tìm kiếm - Search keywords
         searchKeywords: {
             validKeyword: 'áo sơ mi',              // Từ khóa hợp lệ có kết quả
             invalidKeyword: 'mũ',                  // Từ khóa không có kết quả
             accentedKeyword: 'áo sơ mi',           // Từ khóa có dấu
-            nonAccentedKeyword: 'ao so mi',        // Từ khóa không dấu
-            emptyKeyword: ''                       // Từ khóa rỗng
+            nonAccentedKeyword: 'ao so mi'         // Từ khóa không dấu
         },
 
         // Khoảng giá - Price ranges
@@ -28,27 +34,15 @@ module.exports = {
             invalidMin: 1000000,                   // Giá tối thiểu không hợp lệ (1,000,000 VND)
             invalidMax: 100000,                    // Giá tối đa không hợp lệ (100,000 VND)
             textInput: 'abc123'                    // Text không hợp lệ cho input giá
-        },
-
-        // Giá trị dropdown - Dropdown values
+        },        // Giá trị dropdown - Dropdown values
         dropdownValues: {
-            allCategories: '0',                    // Tất cả danh mục
-            sortPriceAsc: 'price-asc',            // Sắp xếp giá tăng dần
-            sortPriceDesc: 'price-desc',          // Sắp xếp giá giảm dần
-            sortNameAsc: 'name-asc',              // Sắp xếp tên A-Z
-            sortNameDesc: 'name-desc'             // Sắp xếp tên Z-A
-        },
-
-        // Thông báo lỗi mong đợi - Expected error messages
+            sortPriceAsc: 'price-asc'             // Sắp xếp giá tăng dần
+        },        // Thông báo lỗi mong đợi - Expected error messages
         errorMessages: {
-            priceValidation: 'Giá tối thiểu không thể lớn hơn giá tối đa',  // Thông báo lỗi validation giá
-            noResults: 'Không tìm thấy sản phẩm nào'                        // Thông báo không có kết quả
-        },
-
-        // Selector cho sản phẩm - Product selectors
+            priceValidation: 'Giá tối thiểu không thể lớn hơn giá tối đa'  // Thông báo lỗi validation giá
+        },        // Selector cho sản phẩm - Product selectors
         productSelectors: {
-            productTitle: '.product-title',        // Selector tiêu đề sản phẩm
-            productPrice: '.product-price'         // Selector giá sản phẩm
+            productTitle: '.product-title'        // Selector tiêu đề sản phẩm
         },
 
         // Các giá trị kiểm tra - Test validation values

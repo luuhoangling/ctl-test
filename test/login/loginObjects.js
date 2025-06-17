@@ -1,27 +1,27 @@
 const testConfig = require('../../config/testConfig');
 
 module.exports = {
-    waitTimes: testConfig.waitTimes,
-
-    loginUsernameInputField: () => $('#username'),
+    // Account credentials - All account information in one place
+    credentials: {
+        valid: {
+            username: 'phuong123',
+            password: 'phuong123'        },
+        invalid: {
+            username: 'phuong1993',
+            password: 'matkhausai'
+        }
+    },// Login-specific wait times object - All timing configurations in one place
+    waitTimes: {
+        // Basic wait times
+        defaultWait: 500,                      // Default wait time
+        submitWait: 1000,                      // Wait after form submission
+        elementWait: 5000,                     // Wait for element to appear
+    },loginUsernameInputField: () => $('#username'),
     loginPasswordInputField: () => $('#password'),
     loginButton: () => $('#loginBtn'),
-    loginForm: () => $('#loginForm'),
-    loginFormErrorMsg: () => $('#login-fail:visible'),
-
-    loginUsernameErrorMsg: () => $('#username-empty, #username-invalid, #username-error'),
-    loginPasswordErrorMsg: () => $('#password-empty, #password-short, #password-error'),
-
-    loginFailMessage: () => $('#login-fail'),
 
     dashboardElement: () => $('.container'),
-    usernameField: () => $('#username'),
-    passwordField: () => $('#password'),
-    registerLink: () => $('a[href="register.php"]'),
-    rememberMeCheckbox: () => $('#remember_me'),
     allErrorMessages: () => $$('.alert-danger, .error-message, #login-fail, #server-error, #username-empty, #username-invalid, #username-error, #password-empty, #password-short, #password-error'),
-    generalErrorMessage: () => $('#login-fail, #server-error'),
-    
     expectedErrorMessages: {
         emptyUsername: [
             'Tên đăng nhập không được để trống',
