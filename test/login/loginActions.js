@@ -35,7 +35,7 @@ class LoginActions {
     // Reset clearing session - gọi method này khi bắt đầu test suite mới
     resetScreenshotSession() {
         ScreenshotUtils.resetSession();
-    }    async navigateToLogin() {
+    } async navigateToLogin() {
         // Navigate to login page using helper method from config
         const currentUrl = await browser.getUrl();
 
@@ -44,7 +44,7 @@ class LoginActions {
             await browser.url(loginUrl);
         }
         await sleep(loginObjects.waitTimes.defaultWait);
-    }async enterLoginUsername(username) {
+    } async enterLoginUsername(username) {
         const usernameField = await loginObjects.loginUsernameInputField();
         await usernameField.waitForDisplayed({ timeout: loginObjects.waitTimes.elementWait });
         await usernameField.setValue(username || '');
@@ -199,8 +199,8 @@ class LoginActions {
             // Lấy thông báo lỗi thực tế hiển thị trên màn hình
             const errorMessages = await this.getVisibleErrorMessages();
 
-            const status = bothErrorsExist ? 'PASSED' : 'FAILED';            console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
-            
+            const status = bothErrorsExist ? 'PASSED' : 'FAILED'; console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
+
             // Chụp screenshot kết quả test
             await this.takeTestResultScreenshot('DN_01', status);
 
@@ -216,7 +216,8 @@ class LoginActions {
 
             await expect(bothErrorsExist).to.be.true;
 
-        } catch (error) {            const duration = Date.now() - testStartTime;
+        } catch (error) {
+            const duration = Date.now() - testStartTime;
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
@@ -245,7 +246,7 @@ class LoginActions {
             // Lấy thông báo lỗi thực tế hiển thị trên màn hình
             const errorMessages = await this.getVisibleErrorMessages();
 
-            const status = usernameErrorExists ? 'PASSED' : 'FAILED';            console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
+            const status = usernameErrorExists ? 'PASSED' : 'FAILED'; console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
             await this.takeTestResultScreenshot('DN_02', status);
@@ -262,7 +263,8 @@ class LoginActions {
 
             await expect(usernameErrorExists).to.be.true;
 
-        } catch (error) {            console.log(`❌ ${testName}: FAILED - ${error.message}`);
+        } catch (error) {
+            console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
             await this.takeTestResultScreenshot('DN_02', 'FAILED');
@@ -290,7 +292,7 @@ class LoginActions {
             // Lấy thông báo lỗi thực tế hiển thị trên màn hình
             const errorMessages = await this.getVisibleErrorMessages();
 
-            const status = passwordErrorExists ? 'PASSED' : 'FAILED';            console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
+            const status = passwordErrorExists ? 'PASSED' : 'FAILED'; console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
             await this.takeTestResultScreenshot('DN_03', status);
@@ -307,7 +309,8 @@ class LoginActions {
 
             await expect(passwordErrorExists).to.be.true;
 
-        } catch (error) {            console.log(`❌ ${testName}: FAILED - ${error.message}`);
+        } catch (error) {
+            console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
             await this.takeTestResultScreenshot('DN_03', 'FAILED');
@@ -335,7 +338,7 @@ class LoginActions {
                 return loginObjects.expectedErrorMessages.invalidCredentials.some(expectedMsg =>
                     msg.includes(expectedMsg)
                 );
-            });            const status = hasLoginError ? 'PASSED' : 'FAILED';
+            }); const status = hasLoginError ? 'PASSED' : 'FAILED';
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
@@ -350,7 +353,8 @@ class LoginActions {
                 actualResult: errorMessages.length > 0 ? errorMessages.join(', ') : 'Không có thông báo lỗi hiển thị'
             });
 
-            await expect(hasLoginError).to.be.true;        } catch (error) {
+            await expect(hasLoginError).to.be.true;
+        } catch (error) {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
@@ -381,7 +385,7 @@ class LoginActions {
                 return loginObjects.expectedErrorMessages.invalidCredentials.some(expectedMsg =>
                     msg.includes(expectedMsg)
                 );
-            });            const status = hasLoginError ? 'PASSED' : 'FAILED';
+            }); const status = hasLoginError ? 'PASSED' : 'FAILED';
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
@@ -396,7 +400,8 @@ class LoginActions {
                 actualResult: errorMessages.length > 0 ? errorMessages.join(', ') : 'Không có thông báo lỗi hiển thị'
             });
 
-            await expect(hasLoginError).to.be.true;        } catch (error) {
+            await expect(hasLoginError).to.be.true;
+        } catch (error) {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
@@ -479,15 +484,15 @@ class LoginActions {
             const uppercasePassword = validPass.toUpperCase();
             await this.login(validUsername, uppercasePassword);            // Kiểm tra xem đăng nhập có thành công không
             const isLoginSuccessful = await this.verifySuccessfulLogin();
-            
+
             if (isLoginSuccessful) {
                 // Nếu đăng nhập thành công, hệ thống không phân biệt case-sensitive cho password
                 console.log(`⚠️  ${testName}: Hệ thống không phân biệt chữ hoa/thường cho mật khẩu`);
-                
+
                 // Đăng xuất để tiếp tục test cases khác
                 const logoutSuccess = await this.logout();
                 console.log(`🔄 Đã đăng xuất để tiếp tục test: ${logoutSuccess ? 'Thành công' : 'Thất bại'}`);
-                
+
                 // Test case PASSED vì hệ thống cho phép đăng nhập với password uppercase
                 const status = 'PASSED';
                 console.log(`✅ ${testName}: ${status} (Hệ thống không phân biệt case)`);
@@ -503,7 +508,7 @@ class LoginActions {
                     expectedResult: 'Hiển thị thông báo lỗi hoặc đăng nhập thành công tùy theo cấu hình hệ thống',
                     actualResult: 'Đăng nhập thành công - Hệ thống không phân biệt chữ hoa/thường cho mật khẩu'
                 });
-                
+
             } else {
                 // Nếu đăng nhập thất bại, kiểm tra thông báo lỗi
                 const errorMessages = await this.getVisibleErrorMessages();
@@ -573,7 +578,7 @@ class LoginActions {
                 return loginObjects.expectedErrorMessages.invalidUsername.some(expectedMsg =>
                     msg.includes(expectedMsg)
                 );
-            });            const status = hasUsernameError ? 'PASSED' : 'FAILED';
+            }); const status = hasUsernameError ? 'PASSED' : 'FAILED';
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
@@ -619,7 +624,7 @@ class LoginActions {
                 return loginObjects.expectedErrorMessages.invalidPassword.some(expectedMsg =>
                     msg.includes(expectedMsg)
                 );
-            });            const status = hasPasswordError ? 'PASSED' : 'FAILED';
+            }); const status = hasPasswordError ? 'PASSED' : 'FAILED';
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
@@ -665,7 +670,7 @@ class LoginActions {
                 return loginObjects.expectedErrorMessages.invalidUsername.some(expectedMsg =>
                     msg.includes(expectedMsg)
                 );
-            });            const status = hasUsernameError ? 'PASSED' : 'FAILED';
+            }); const status = hasUsernameError ? 'PASSED' : 'FAILED';
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
@@ -711,7 +716,7 @@ class LoginActions {
                 return loginObjects.expectedErrorMessages.invalidUsername.some(expectedMsg =>
                     msg.includes(expectedMsg)
                 );
-            });            const status = hasUsernameError ? 'PASSED' : 'FAILED';
+            }); const status = hasUsernameError ? 'PASSED' : 'FAILED';
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
@@ -745,7 +750,8 @@ class LoginActions {
 
     async verifySuccessfulLogin() {
         try {
-            // Kiểm tra xem có redirect đến dashboard hoặc trang chủ không            const currentUrl = await browser.getUrl();
+            // Kiểm tra xem có redirect đến dashboard hoặc trang chủ không            
+            const currentUrl = await browser.getUrl();
 
             // Kiểm tra URL không còn chứa "login"
             if (!currentUrl.includes('login')) {
@@ -759,21 +765,24 @@ class LoginActions {
                 return await dashboardElement.isDisplayed();
             } catch (error) {
                 return false;
-            }        } catch (error) {
+            }
+        } catch (error) {
             return false;
         }
-    }    async logout() {        try {
+    } async logout() {
+        try {
             // Đăng xuất trực tiếp bằng URL - đơn giản và đáng tin cậy
             const logoutUrl = testConfig.baseUrl + '/logout.php';
             await browser.url(logoutUrl);
-            
+
             // Chờ một chút để đảm bảo logout hoàn tất
             await sleep(5000);
             return true;
-            
+
         } catch (error) {
             return false;
-        }    }
+        }
+    }
 
     // DN_12: Kiểm tra đăng nhập với tài khoản và mật khẩu chính xác
     async DN_12_ValidLogin() {
@@ -786,7 +795,7 @@ class LoginActions {
             await sleep(1000);
 
             // Kiểm tra đăng nhập thành công
-            const isLoginSuccessful = await this.verifySuccessfulLogin();            const status = isLoginSuccessful ? 'PASSED' : 'FAILED';
+            const isLoginSuccessful = await this.verifySuccessfulLogin(); const status = isLoginSuccessful ? 'PASSED' : 'FAILED';
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
@@ -834,22 +843,22 @@ class LoginActions {
             // Thực hiện vòng lặp 6 lần đăng nhập sai (5 lần + 1 lần để trigger thông báo)
             for (let i = 1; i <= 6; i++) {
                 console.log(`   Lần thử ${i}/6: Đăng nhập với thông tin sai...`);
-                
+
                 // Sử dụng valid username nhưng wrong password từ testConfig
                 await this.login(validUsername, invalidPass);
-                  // Chờ một chút giữa các lần thử
+                // Chờ một chút giữa các lần thử
                 await sleep(1000);
             }
 
             // Sau 6 lần sai, kiểm tra thông báo khóa tài khoản
             console.log(`   Kiểm tra thông báo khóa tài khoản...`);
-            
+
             const errorMessages = await this.getVisibleErrorMessages();
             const hasAccountLockedError = errorMessages.some(msg => {
                 return loginObjects.expectedErrorMessages.accountLocked.some(expectedMsg =>
                     msg.includes(expectedMsg)
                 );
-            });            const status = hasAccountLockedError ? 'PASSED' : 'FAILED';
+            }); const status = hasAccountLockedError ? 'PASSED' : 'FAILED';
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test

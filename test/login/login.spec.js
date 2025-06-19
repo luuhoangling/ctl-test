@@ -1,73 +1,58 @@
 const loginActions = require('./loginActions');
+const { TEST_CASE_NAMES } = require('./testCaseNames');
 
-describe('Đăng nhập - Test Cases', () => {
+describe('TESTCASE - ĐĂNG NHẬP', () => {
 
-    // DN_01: Kiểm tra đăng nhập khi bỏ trống cả tài khoản và mật khẩu
-    it("DN_01: Kiểm tra đăng nhập khi bỏ trống cả tài khoản và mật khẩu", async () => {
+    it(TEST_CASE_NAMES.DN_01, async () => {
         await loginActions.DN_01_EmptyUsernameAndPassword();
     });
 
-    // DN_02: Kiểm tra đăng nhập khi bỏ trống tài khoản, chỉ nhập mật khẩu
-    it("DN_02: Kiểm tra đăng nhập khi bỏ trống tài khoản, chỉ nhập mật khẩu", async () => {
+    it(TEST_CASE_NAMES.DN_02, async () => {
         await loginActions.DN_02_EmptyUsernameOnlyPassword();
     });
 
-    // DN_03: Kiểm tra đăng nhập khi bỏ trống mật khẩu, chỉ nhập tài khoản
-    it("DN_03: Kiểm tra đăng nhập khi bỏ trống mật khẩu, chỉ nhập tài khoản", async () => {
+    it(TEST_CASE_NAMES.DN_03, async () => {
         await loginActions.DN_03_EmptyPasswordOnlyUsername();
     });
 
-    // DN_04: Kiểm tra đăng nhập với tài khoản chưa đăng ký
-    it("DN_04: Kiểm tra đăng nhập với tài khoản chưa đăng ký", async () => {
+    it(TEST_CASE_NAMES.DN_04, async () => {
         await loginActions.DN_04_UnregisteredAccount();
     });
 
-    // DN_05: Kiểm tra đăng nhập với tài khoản đúng nhưng sai mật khẩu 
-    it("DN_05: Kiểm tra đăng nhập với tài khoản đúng nhưng sai mật khẩu ", async () => {
+    it(TEST_CASE_NAMES.DN_05, async () => {
         await loginActions.DN_05_WrongPassword();
     });
 
-    // DN_06: Kiểm tra đăng nhập với tài khoản viết in hoa, mật khẩu đúng
-    it("DN_06: Kiểm tra đăng nhập với tài khoản viết in hoa, mật khẩu đúng", async () => {
+    it(TEST_CASE_NAMES.DN_06, async () => {
         await loginActions.DN_06_UppercaseUsername();
     });
 
-    // DN_07: Kiểm tra đăng nhập với mật khẩu viết in hoa, tài khoản đúng
-    it("DN_07: Kiểm tra đăng nhập với mật khẩu viết in hoa, tài khoản đúng", async () => {
+    it(TEST_CASE_NAMES.DN_07, async () => {
         await loginActions.DN_07_UppercasePassword();
     });
 
-    // DN_08: Kiểm tra đăng nhập với tài khoản chứa 1 ký tự
-    it("DN_08: Kiểm tra đăng nhập với tài khoản chứa 1 ký tự", async () => {
+    it(TEST_CASE_NAMES.DN_08, async () => {
         await loginActions.DN_08_InvalidShortUsername();
     });
 
-    // DN_09: Kiểm tra đăng nhập với mật khẩu 1 ký tự
-    it("DN_09: Kiểm tra đăng nhập với mật khẩu 1 ký tự", async () => {
+    it(TEST_CASE_NAMES.DN_09, async () => {
         await loginActions.DN_09_InvalidShortPassword();
     });
 
-    // DN_10: Kiểm tra đăng nhập khi tài khoản chứa 100 ký tự a
-    it("DN_10: Kiểm tra đăng nhập khi tài khoản chứa 100 ký tự a", async () => {
+    it(TEST_CASE_NAMES.DN_10, async () => {
         await loginActions.DN_10_LongUsername();
     });
 
-    // DN_11: Kiểm tra đăng nhập khi tài khoản chứa ký tự đặc biệt
-    it("DN_11: Kiểm tra đăng nhập khi tài khoản chứa ký tự đặc biệt", async () => {
+    it(TEST_CASE_NAMES.DN_11, async () => {
         await loginActions.DN_11_SpecialCharacterUsername();
     });
 
-    // DN_12: Kiểm tra đăng nhập với tài khoản và mật khẩu chính xác
-    it("DN_12: Kiểm tra đăng nhập với tài khoản và mật khẩu chính xác", async () => {
+    it(TEST_CASE_NAMES.DN_12, async () => {
         await loginActions.DN_12_ValidLogin();
-    });
-
-    // DN_13: Kiểm tra đăng nhập sai quá 5 lần liên tiếp
-    it("DN_13: Kiểm tra đăng nhập sai quá 5 lần liên tiếp", async () => {
+    });    it(TEST_CASE_NAMES.DN_13, async () => {
         await loginActions.DN_13_MultipleFailedLogins();
     });
 
-    // Xuất kết quả ra Excel sau khi chạy xong tất cả test
     after(async () => {
         const filePath = await loginActions.exportTestResults();
         if (filePath) {

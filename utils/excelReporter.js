@@ -14,13 +14,11 @@ class ExcelReporter {
     }    // Thêm kết quả test
     addTestResult(testData) {
         const result = {
-            'STT': this.testResults.length + 1,
-            'Tên Test Case': testData.testName || 'N/A',
+            'Test Case': testData.testName || 'N/A',
             'Mô tả': testData.description || 'N/A',
             'Kết quả': testData.status || 'N/A',
-            'Dữ liệu đầu vào': testData.inputData || '',
-            'Kết quả mong đợi': testData.expectedResult || '',
-            'Kết quả thực tế': testData.actualResult || ''
+            'Input': testData.inputData || '',
+            'Output': testData.actualResult || ''
         };
 
         this.testResults.push(result);
