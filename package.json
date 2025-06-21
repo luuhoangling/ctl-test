@@ -2,13 +2,13 @@
   "name": "ctl-web-automation",
   "version": "1.0.0",
   "description": "CTL web automation testing using webdriverio",
-  "main": "index.js",  "scripts": {
-    "test": "npx wdio wdio.conf.js",    
+  "main": "index.js",
+  "scripts": {
+    "test": "npx wdio wdio.conf.js",
     "login": "wdio wdio.conf.js --suite login",
     "search": "wdio wdio.conf.js --suite search",
     "profile": "wdio wdio.conf.js --suite profile",
     "ctlWeb": "wdio wdio.conf.js --suite ctlWeb",
-    "getReport": "allure generate --clean allure-results && allure open",
     "export-results": "node exportResults.js",
     "clear-screenshots": "node clearScreenshots.js",
     "clear-login-screenshots": "node clearScreenshots.js login",
@@ -25,14 +25,12 @@
     "webdriverio",
     "chai",
     "mocha",
-    "allure",
     "node-xlsx",
     "data-driven"
   ],
   "author": "hridoy_das",
   "license": "ISC",
   "devDependencies": {
-    "@wdio/allure-reporter": "^9.15.0",
     "@wdio/cli": "^8.17.0",
     "@wdio/local-runner": "^8.17.0",
     "@wdio/mocha-framework": "^8.17.0",

@@ -54,8 +54,6 @@ typings/
 .yarn-integrity
 
 # Test results
-allure-results/
-allure-report/
 screenshots/
 logs/
 *.png
