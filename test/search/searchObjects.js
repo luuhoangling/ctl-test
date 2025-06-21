@@ -61,23 +61,6 @@ module.exports = {    // Consolidated wait times object - All timing configurati
             targetCategory: 'Áo',                  // Danh mục mục tiêu để test
             allCategoriesText: 'Tất cả danh mục'   // Text cho tùy chọn "Tất cả danh mục"
         },
-
-        // Tên test cases - Test case names
-        testNames: {
-            TK_01: 'TK_01: Kiểm tra tìm kiếm với từ khóa hợp lệ',
-            TK_02: 'TK_02: Kiểm tra tìm kiếm với từ khóa không có kết quả',
-            TK_03: 'TK_03: Kiểm tra tìm kiếm với từ khóa có dấu hoặc không dấu',
-            TK_04: 'TK_04: Kiểm tra tìm kiếm với từ khóa rỗng',
-            TK_05: 'TK_05: Kiểm tra lọc theo danh mục cụ thể',
-            TK_06: 'TK_06: Nhập khoảng giá tối thiểu và tối đa hợp lệ',
-            TK_07: 'TK_07: Nhập giá tối thiểu lớn hơn giá tối đa',
-            TK_08: 'TK_08: Nhập chữ vào ô giá',
-            TK_09: 'TK_09: Sắp xếp theo giá tăng dần',
-            TK_10: 'TK_10: Sắp xếp theo giá giảm dần',
-            TK_11: 'TK_11: Kết hợp tìm kiếm + danh mục + giá',
-            TK_12: 'TK_12: Nhấn "Xóa Bộ Lọc" sau khi lọc',
-            TK_07_AllCategory: 'TK_07: Chọn lại "Tất cả danh mục" → Hiển thị toàn bộ sản phẩm'
-        }
     },
 
     // 1. Form lọc - Thẻ <form> lọc sản phẩm
