@@ -42,13 +42,7 @@ exports.config = {
     maxInstances: 10,
     capabilities: [{
         browserName: 'MicrosoftEdge'
-    }],
-    logLevels: {
-        webdriver: 'silent',
-        '@wdio/appium-service': 'silent'
-    },
-    outputDir: './logs',
-    logFileName: 'ctlWeb.log',
+    }],    logLevel: 'silent',
     bail: 0,
     baseUrl: testConfig.baseUrl,
     waitforTimeout: testConfig.defaultTimeout,
