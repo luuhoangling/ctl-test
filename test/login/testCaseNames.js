@@ -1,5 +1,3 @@
-// Object chứa tất cả tên testcase cho module login
-// Đảm bảo đồng bộ giữa file spec và actions
 const TEST_CASE_NAMES = {
     DN_01: 'DN_01: Kiểm tra đăng nhập khi bỏ trống cả tài khoản và mật khẩu',
     DN_02: 'DN_02: Kiểm tra đăng nhập khi bỏ trống tài khoản, chỉ nhập mật khẩu',

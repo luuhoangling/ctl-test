@@ -11,11 +11,11 @@ class ExcelReporter {
         if (!fs.existsSync(this.resultsDir)) {
             fs.mkdirSync(this.resultsDir, { recursive: true });
         }
-    }    // Thêm kết quả test
+    }    
+    // Thêm kết quả test
     addTestResult(testData) {
         const result = {
             'Test Case': testData.testName || 'N/A',
-            'Mô tả': testData.description || 'N/A',
             'Kết quả': testData.status || 'N/A',
             'Input': testData.inputData || '',
             'Output': testData.actualResult || ''
@@ -134,7 +134,8 @@ class ExcelReporter {
                         }
                     };
                 }
-            }        }
+            }
+        }
     }
 
     // Log test result - method mới để tương thích với profile actions
@@ -146,9 +147,9 @@ class ExcelReporter {
             timestamp: new Date().toISOString(),
             duration: 'N/A'
         };
-        
+
         this.addTestResult(testData);
-        
+
         // Log to console
         console.log(`[${status}] ${testName}: ${description}`);
     }

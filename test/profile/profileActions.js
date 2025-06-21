@@ -4,6 +4,7 @@ const testConfig = require('../../config/testConfig');
 const expect = require("chai").expect;
 const ExcelReporter = require('../../utils/excelReporter');
 const ScreenshotUtils = require('../../utils/screenshotUtils');
+const { TEST_CASE_NAMES } = require('./testCaseNames');
 
 // Tạo instance của ExcelReporter
 const excelReporter = new ExcelReporter();
@@ -251,11 +252,8 @@ class ProfileActions {
             }
 
             console.log('✅ TT_01: PASSED - Validation errors hiển thị đúng');
-            await this.takeTestResultScreenshot('TT_01', 'PASSED');
-
-            excelReporter.addTestResult({
-                testName: 'TT_01',
-                description: 'Bỏ trống tất cả các trường bắt buộc → Hiển thị lỗi yêu cầu nhập đầy đủ',
+            await this.takeTestResultScreenshot('TT_01', 'PASSED');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_01,
                 status: 'PASSED',
                 inputData: 'Fullname: "", Email: ""',
                 expectedResult: 'Hiển thị lỗi validation cho các trường bắt buộc',
@@ -263,11 +261,8 @@ class ProfileActions {
             });
         } catch (error) {
             console.log('❌ TT_01: FAILED -', error.message);
-            await this.takeTestResultScreenshot('TT_01', 'FAILED');
-
-            excelReporter.addTestResult({
-                testName: 'TT_01',
-                description: 'Bỏ trống tất cả các trường bắt buộc → Hiển thị lỗi yêu cầu nhập đầy đủ',
+            await this.takeTestResultScreenshot('TT_01', 'FAILED');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_01,
                 status: 'FAILED',
                 inputData: 'Fullname: "", Email: ""',
                 expectedResult: 'Hiển thị lỗi validation cho các trường bắt buộc',
@@ -332,11 +327,8 @@ class ProfileActions {
             }
 
             console.log('✅ TT_02: PASSED - Validation error hiển thị đúng cho trường họ và tên trống');
-            await this.takeTestResultScreenshot('TT_02', 'PASSED');
-
-            excelReporter.addTestResult({
-                testName: 'TT_02',
-                description: 'Bỏ trống họ và tên → Hiển thị lỗi yêu cầu nhập họ tên',
+            await this.takeTestResultScreenshot('TT_02', 'PASSED');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_02,
                 status: 'PASSED',
                 inputData: `Fullname: "", Email: "${testData.email}"`,
                 expectedResult: 'Hiển thị lỗi validation cho trường họ và tên, không có lỗi cho email',
@@ -344,11 +336,8 @@ class ProfileActions {
             });
         } catch (error) {
             console.log('❌ TT_02: FAILED -', error.message);
-            await this.takeTestResultScreenshot('TT_02', 'FAILED');
-
-            excelReporter.addTestResult({
-                testName: 'TT_02',
-                description: 'Bỏ trống họ và tên → Hiển thị lỗi yêu cầu nhập họ tên',
+            await this.takeTestResultScreenshot('TT_02', 'FAILED');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_02,
                 status: 'FAILED',
                 inputData: `Fullname: "", Email: "${profileObjects.testData.validUserInfo.email}"`,
                 expectedResult: 'Hiển thị lỗi validation cho trường họ và tên',
@@ -415,11 +404,8 @@ class ProfileActions {
             }
 
             console.log('✅ TT_03: PASSED - Validation error hiển thị đúng cho trường email trống');
-            await this.takeTestResultScreenshot('TT_03', 'PASSED');
-
-            excelReporter.addTestResult({
-                testName: 'TT_03',
-                description: 'Bỏ trống email → Hiển thị lỗi yêu cầu nhập email',
+            await this.takeTestResultScreenshot('TT_03', 'PASSED');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_03,
                 status: 'PASSED',
                 inputData: `Fullname: "${testData.fullname}", Email: ""`,
                 expectedResult: 'Hiển thị lỗi validation cho trường email, không có lỗi cho họ tên',
@@ -427,11 +413,8 @@ class ProfileActions {
             });
         } catch (error) {
             console.log('❌ TT_03: FAILED -', error.message);
-            await this.takeTestResultScreenshot('TT_03', 'FAILED');
-
-            excelReporter.addTestResult({
-                testName: 'TT_03',
-                description: 'Bỏ trống email → Hiển thị lỗi yêu cầu nhập email',
+            await this.takeTestResultScreenshot('TT_03', 'FAILED');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_03,
                 status: 'FAILED',
                 inputData: `Fullname: "${profileObjects.testData.validUserInfo.fullname}", Email: ""`,
                 expectedResult: 'Hiển thị lỗi validation cho trường email',
@@ -471,43 +454,33 @@ class ProfileActions {
             await this.fillProfileForm(testData);
             const submitButton = await profileObjects.submitButton();
             await submitButton.waitForClickable({ timeout: 5000 });
-            await submitButton.click();
-
-            // Kiểm tra thông báo lỗi cho mật khẩu hiện tại
+            await submitButton.click();            // Kiểm tra thông báo lỗi cho mật khẩu hiện tại
             await browser.pause(profileObjects.profileWaitTimes.validationMessage);
 
-            const hasValidationErrors = await profileObjects.hasValidationErrors();
             const currentPasswordErrorMessage = await profileObjects.getErrorMessage(profileObjects.currentPasswordError);
             const serverErrorMessage = await profileObjects.getErrorMessage(profileObjects.errorMessage);
-            const stillOnProfilePage = (await browser.getUrl()).includes('profile');
-            const allErrors = await profileObjects.getAllValidationErrors();            // Kiểm tra rằng có lỗi cho mật khẩu hiện tại
-            const hasCurrentPasswordError = currentPasswordErrorMessage.includes(profileObjects.testData.errorMessages.wrongCurrentPassword) ||
-                serverErrorMessage.includes(profileObjects.testData.errorMessages.wrongCurrentPassword) ||
-                currentPasswordErrorMessage.includes('không đúng') ||
-                serverErrorMessage.includes('không đúng') ||
-                serverErrorMessage.includes('incorrect') ||
-                allErrors.some(error => error.includes('mật khẩu') && (error.includes('không đúng') || error.includes('incorrect')));
+            const allErrors = await profileObjects.getAllValidationErrors();
+            
+            // Kiểm tra chính xác thông báo lỗi mong đợi
+            const expectedErrorMessage = profileObjects.testData.errorMessages.wrongCurrentPassword;
+            const hasExpectedError = currentPasswordErrorMessage.includes(expectedErrorMessage) ||
+                serverErrorMessage.includes(expectedErrorMessage) ||
+                allErrors.some(error => error.includes(expectedErrorMessage));
 
-            const validationWorked = hasValidationErrors || hasCurrentPasswordError || stillOnProfilePage;
-
-            if (!validationWorked) {
-                throw new Error('Không có thông báo lỗi nào được hiển thị cho mật khẩu hiện tại sai');
-            }            console.log('✅ TT_04: PASSED - Thông báo lỗi hiển thị đúng cho mật khẩu hiện tại không đúng');
-            await this.takeTestResultScreenshot('TT_04', 'PASSED');
-
-            excelReporter.addTestResult({
-                testName: 'TT_04',
-                description: 'Nhập mật khẩu cũ không chính xác → Thông báo mật khẩu hiện tại không đúng',
+            if (!hasExpectedError) {
+                throw new Error(`Thông báo lỗi không chính xác. Mong đợi: "${expectedErrorMessage}". Thực tế: "${currentPasswordErrorMessage || serverErrorMessage}"`);
+            }console.log('✅ TT_04: PASSED - Thông báo lỗi hiển thị đúng cho mật khẩu hiện tại không đúng');
+            await this.takeTestResultScreenshot('TT_04', 'PASSED');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_04,
                 status: 'PASSED',
                 inputData: `Current Password: "${testData.currentPassword}", New Password: "${testData.newPassword}"`,
                 expectedResult: `Hiển thị lỗi "${profileObjects.testData.errorMessages.wrongCurrentPassword}"`,
-                actualResult: currentPasswordErrorMessage
+                actualResult: `${currentPasswordErrorMessage || serverErrorMessage}`
             });
         } catch (error) {
             console.log('❌ TT_04: FAILED -', error.message);
             await this.takeTestResultScreenshot('TT_04', 'FAILED');            excelReporter.addTestResult({
-                testName: 'TT_04',
-                description: 'Nhập mật khẩu cũ không chính xác → Thông báo mật khẩu hiện tại không đúng',
+                testName: TEST_CASE_NAMES.TT_04,
                 status: 'FAILED',
                 inputData: `Current Password: "${profileObjects.testData.invalidUserInfo.wrongCurrentPassword}"`,
                 expectedResult: `Hiển thị lỗi "${profileObjects.testData.errorMessages.wrongCurrentPassword}"`,
@@ -568,11 +541,8 @@ class ProfileActions {
             }
 
             console.log('✅ TT_05: PASSED - Validation error hiển thị đúng cho trường xác nhận mật khẩu trống');
-            await this.takeTestResultScreenshot('TT_05', 'PASSED');
-
-            excelReporter.addTestResult({
-                testName: 'TT_05',
-                description: 'Nhập mật khẩu mới, bỏ trống xác nhận mật khẩu → Hiển thị lỗi yêu cầu xác nhận mật khẩu',
+            await this.takeTestResultScreenshot('TT_05', 'PASSED');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_05,
                 status: 'PASSED',
                 inputData: `New Password: "${testData.newPassword}", Confirm Password: ""`,
                 expectedResult: 'Hiển thị lỗi validation cho trường xác nhận mật khẩu',
@@ -580,11 +550,8 @@ class ProfileActions {
             });
         } catch (error) {
             console.log('❌ TT_05: FAILED -', error.message);
-            await this.takeTestResultScreenshot('TT_05', 'FAILED');
-
-            excelReporter.addTestResult({
-                testName: 'TT_05',
-                description: 'Nhập mật khẩu mới, bỏ trống xác nhận mật khẩu → Hiển thị lỗi yêu cầu xác nhận mật khẩu',
+            await this.takeTestResultScreenshot('TT_05', 'FAILED');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_05,
                 status: 'FAILED',
                 inputData: `New Password: "${profileObjects.testData.validUserInfo.newPassword}", Confirm Password: ""`,
                 expectedResult: 'Hiển thị lỗi validation cho trường xác nhận mật khẩu',
@@ -645,11 +612,8 @@ class ProfileActions {
             }
 
             console.log('✅ TT_06: PASSED - Validation error hiển thị đúng cho mật khẩu không khớp');
-            await this.takeTestResultScreenshot('TT_06', 'PASSED');
-
-            excelReporter.addTestResult({
-                testName: 'TT_06',
-                description: 'Nhập mật khẩu mới và xác nhận mật khẩu không khớp → Hiển thị lỗi mật khẩu và xác nhận mật khẩu không khớp',
+            await this.takeTestResultScreenshot('TT_06', 'PASSED');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_06,
                 status: 'PASSED',
                 inputData: `New Password: "${testData.newPassword}", Confirm Password: "${testData.confirmPassword}"`,
                 expectedResult: `Hiển thị lỗi "${profileObjects.testData.errorMessages.passwordMismatch}"`,
@@ -657,11 +621,8 @@ class ProfileActions {
             });
         } catch (error) {
             console.log('❌ TT_06: FAILED -', error.message);
-            await this.takeTestResultScreenshot('TT_06', 'FAILED');
-
-            excelReporter.addTestResult({
-                testName: 'TT_06',
-                description: 'Nhập mật khẩu mới và xác nhận mật khẩu không khớp → Hiển thị lỗi mật khẩu và xác nhận mật khẩu không khớp',
+            await this.takeTestResultScreenshot('TT_06', 'FAILED');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_06,
                 status: 'FAILED', inputData: `New Password: "${profileObjects.testData.validUserInfo.newPassword}", Confirm Password: "${profileObjects.testData.invalidUserInfo.mismatchConfirmPassword}"`,
                 expectedResult: `Hiển thị lỗi "${profileObjects.testData.errorMessages.passwordMismatch}"`,
                 actualResult: `Error: ${error.message}`
@@ -700,38 +661,33 @@ class ProfileActions {
             await this.fillProfileForm(testData);
             const submitButton = await profileObjects.submitButton();
             await submitButton.waitForClickable({ timeout: 5000 });
-            await submitButton.click();
-
-            // Kiểm tra validation cho mật khẩu quá ngắn
+            await submitButton.click();            // Kiểm tra validation cho mật khẩu quá ngắn
             await browser.pause(profileObjects.profileWaitTimes.validationMessage);
 
-            const hasValidationErrors = await profileObjects.hasValidationErrors();
             const newPasswordErrorMessage = await profileObjects.getErrorMessage(profileObjects.newPasswordError);
-            const stillOnProfilePage = (await browser.getUrl()).includes('profile');
-            const allErrors = await profileObjects.getAllValidationErrors();            // Kiểm tra rằng có lỗi validation cho mật khẩu quá ngắn
-            const hasShortPasswordError = newPasswordErrorMessage.includes(profileObjects.testData.errorMessages.shortPassword) ||
-                allErrors.some(error => error.includes(profileObjects.testData.errorMessages.shortPassword));
+            const serverErrorMessage = await profileObjects.getErrorMessage(profileObjects.errorMessage);
+            const allErrors = await profileObjects.getAllValidationErrors();
+            
+            // Kiểm tra chính xác thông báo lỗi mong đợi
+            const expectedErrorMessage = profileObjects.testData.errorMessages.shortPassword;
+            const hasExpectedError = newPasswordErrorMessage.includes(expectedErrorMessage) ||
+                serverErrorMessage.includes(expectedErrorMessage) ||
+                allErrors.some(error => error.includes(expectedErrorMessage));
 
-            const validationWorked = hasValidationErrors || hasShortPasswordError || stillOnProfilePage;
-
-            if (!validationWorked) {
-                throw new Error('Không có validation error nào được hiển thị cho mật khẩu quá ngắn');
-            }            console.log('✅ TT_07: PASSED - Validation error hiển thị đúng cho mật khẩu quá ngắn');
-            await this.takeTestResultScreenshot('TT_07', 'PASSED');
-
-            excelReporter.addTestResult({
-                testName: 'TT_07',
-                description: 'Nhập mật khẩu mới ít hơn 6 ký tự → Hiển thị lỗi "Mật khẩu mới phải có ít nhất 6 ký tự"',
+            if (!hasExpectedError) {
+                throw new Error(`Thông báo lỗi không chính xác. Mong đợi: "${expectedErrorMessage}". Thực tế: "${newPasswordErrorMessage || serverErrorMessage}"`);
+            }console.log('✅ TT_07: PASSED - Validation error hiển thị đúng cho mật khẩu quá ngắn');
+            await this.takeTestResultScreenshot('TT_07', 'PASSED');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_07,
                 status: 'PASSED',
                 inputData: `New Password: "${testData.newPassword}" (${testData.newPassword.length} ký tự)`,
                 expectedResult: `Hiển thị lỗi "${profileObjects.testData.errorMessages.shortPassword}"`,
-                actualResult: newPasswordErrorMessage
+                actualResult: `${newPasswordErrorMessage || serverErrorMessage}`
             });
         } catch (error) {
             console.log('❌ TT_07: FAILED -', error.message);
             await this.takeTestResultScreenshot('TT_07', 'FAILED');            excelReporter.addTestResult({
-                testName: 'TT_07',
-                description: 'Nhập mật khẩu mới ít hơn 6 ký tự → Hiển thị lỗi "Mật khẩu mới phải có ít nhất 6 ký tự"',
+                testName: TEST_CASE_NAMES.TT_07,
                 status: 'FAILED',
                 inputData: `New Password: "${profileObjects.testData.invalidUserInfo.shortNewPassword}" (${profileObjects.testData.invalidUserInfo.shortNewPassword.length} ký tự)`,
                 expectedResult: `Hiển thị lỗi "${profileObjects.testData.errorMessages.shortPassword}"`,
@@ -787,11 +743,8 @@ class ProfileActions {
             }
 
             console.log('✅ TT_08: PASSED - Validation error hiển thị đúng cho email không đúng định dạng');
-            await this.takeTestResultScreenshot('TT_08', 'PASSED');
-
-            excelReporter.addTestResult({
-                testName: 'TT_08',
-                description: 'Nhập email không đúng định dạng → Hiển thị lỗi "Email không hợp lệ"',
+            await this.takeTestResultScreenshot('TT_08', 'PASSED');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_08,
                 status: 'PASSED',
                 inputData: `Email: "${testData.email}"`,
                 expectedResult: `Hiển thị lỗi "${profileObjects.testData.errorMessages.invalidEmailFormat}" hoặc "Email không đúng định dạng"`,
@@ -799,11 +752,8 @@ class ProfileActions {
             });
         } catch (error) {
             console.log('❌ TT_08: FAILED -', error.message);
-            await this.takeTestResultScreenshot('TT_08', 'FAILED');
-
-            excelReporter.addTestResult({
-                testName: 'TT_08',
-                description: 'Nhập email không đúng định dạng → Hiển thị lỗi "Email không hợp lệ"',
+            await this.takeTestResultScreenshot('TT_08', 'FAILED');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_08,
                 status: 'FAILED',
                 inputData: `Email: "${profileObjects.testData.invalidUserInfo.invalidEmail}"`,
                 expectedResult: `Hiển thị lỗi "${profileObjects.testData.errorMessages.invalidEmailFormat}"`,
@@ -854,22 +804,20 @@ class ProfileActions {
 
             if (!validationWorked) {
                 console.log('⚠️ TT_09: Email có thể chưa tồn tại trong hệ thống, hoặc validation khác');
-            }            console.log('✅ TT_09: Test completed - Kiểm tra email đã tồn tại');
-            await this.takeTestResultScreenshot('TT_09', validationWorked ? 'PASSED' : 'INFO');
-
+            }            
+            console.log('✅ TT_09: Test completed - Kiểm tra email đã tồn tại');
+            await this.takeTestResultScreenshot('TT_09', validationWorked ? 'PASSED' : 'INFO');            
             excelReporter.addTestResult({
-                testName: 'TT_09',
-                description: 'Nhập email đã tồn tại → Hiển thị lỗi "Email đã được sử dụng"',
+                testName: TEST_CASE_NAMES.TT_09,
                 status: validationWorked ? 'PASSED' : 'INFO',
                 inputData: `Email: "${testData.email}"`,
                 expectedResult: `Hiển thị lỗi "${profileObjects.testData.errorMessages.existingEmail}"`,
-                actualResult: `Existing email error: ${hasExistingEmailError}, Still on profile: ${stillOnProfilePage}, Server error: "${serverErrorMessage}"`
+                actualResult: `${serverErrorMessage}`
             });
         } catch (error) {
             console.log('❌ TT_09: FAILED -', error.message);
             await this.takeTestResultScreenshot('TT_09', 'FAILED');            excelReporter.addTestResult({
-                testName: 'TT_09',
-                description: 'Nhập email đã tồn tại → Hiển thị lỗi "Email đã được sử dụng"',
+                testName: TEST_CASE_NAMES.TT_09,
                 status: 'FAILED',
                 inputData: `Email: "${testData.email}"`,
                 expectedResult: `Hiển thị lỗi "${profileObjects.testData.errorMessages.existingEmail}"`,
@@ -932,11 +880,8 @@ class ProfileActions {
             }
 
             console.log('✅ TT_10: Test completed - Cập nhật thông tin hợp lệ thành công');
-            await this.takeTestResultScreenshot('TT_10', updateSuccessful ? 'PASSED' : 'INFO');
-
-            excelReporter.addTestResult({
-                testName: 'TT_10',
-                description: 'Nhập đầy đủ họ tên và email hợp lệ, không đổi mật khẩu → Cập nhật thành công',
+            await this.takeTestResultScreenshot('TT_10', updateSuccessful ? 'PASSED' : 'INFO');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_10,
                 status: updateSuccessful ? 'PASSED' : 'INFO',
                 inputData: `Fullname: "${testData.fullname}", Email: "${testData.email}"`,
                 expectedResult: `Hiển thị thông báo "${profileObjects.testData.errorMessages.updateSuccess}"`,
@@ -944,11 +889,8 @@ class ProfileActions {
             });
         } catch (error) {
             console.log('❌ TT_10: FAILED -', error.message);
-            await this.takeTestResultScreenshot('TT_10', 'FAILED');
-
-            excelReporter.addTestResult({
-                testName: 'TT_10',
-                description: 'Nhập đầy đủ họ tên và email hợp lệ, không đổi mật khẩu → Cập nhật thành công',
+            await this.takeTestResultScreenshot('TT_10', 'FAILED');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_10,
                 status: 'FAILED',
                 inputData: `Fullname: "Nguyễn Văn B Updated", Email: "updated.email@example.com"`,
                 expectedResult: `Hiển thị thông báo "${profileObjects.testData.errorMessages.updateSuccess}"`,
@@ -978,7 +920,7 @@ class ProfileActions {
 
             // Submit form với đầy đủ thông tin hợp lệ (bao gồm đổi mật khẩu)
             const testData = {
-                fullname: 'Đoàn Minh Phơng',
+                fullname: 'Đoàn Minh Phương',
                 email: 'dm.phuong@hehe.com',
                 currentPassword: validCredentials.password, // Mật khẩu hiện tại đúng
                 newPassword: 'phuong123',
@@ -1013,11 +955,8 @@ class ProfileActions {
             }
 
             console.log('✅ TT_11: Test completed - Cập nhật thông tin + đổi mật khẩu thành công');
-            await this.takeTestResultScreenshot('TT_11', updateSuccessful ? 'PASSED' : 'INFO');
-
-            excelReporter.addTestResult({
-                testName: 'TT_11',
-                description: 'Cập nhật họ tên + đổi mật khẩu thành công (đúng tất cả điều kiện) → Thông báo cập nhật thành công',
+            await this.takeTestResultScreenshot('TT_11', updateSuccessful ? 'PASSED' : 'INFO');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_11,
                 status: updateSuccessful ? 'PASSED' : 'INFO',
                 inputData: `Fullname: "${testData.fullname}", Email: "${testData.email}", Password changed: Yes`,
                 expectedResult: `Hiển thị thông báo "${profileObjects.testData.errorMessages.updateSuccess}" hoặc "${profileObjects.testData.errorMessages.passwordUpdateSuccess}"`,
@@ -1025,11 +964,8 @@ class ProfileActions {
             });
         } catch (error) {
             console.log('❌ TT_11: FAILED -', error.message);
-            await this.takeTestResultScreenshot('TT_11', 'FAILED');
-
-            excelReporter.addTestResult({
-                testName: 'TT_11',
-                description: 'Cập nhật họ tên + đổi mật khẩu thành công (đúng tất cả điều kiện) → Thông báo cập nhật thành công',
+            await this.takeTestResultScreenshot('TT_11', 'FAILED');            excelReporter.addTestResult({
+                testName: TEST_CASE_NAMES.TT_11,
                 status: 'FAILED',
                 inputData: `Fullname: "Nguyễn Văn C Updated", Email: "updated.withpass@example.com", Password changed: Yes`,
                 expectedResult: `Hiển thị thông báo "${profileObjects.testData.errorMessages.updateSuccess}" hoặc "${profileObjects.testData.errorMessages.passwordUpdateSuccess}"`,

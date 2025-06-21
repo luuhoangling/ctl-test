@@ -202,14 +202,11 @@ class LoginActions {
             const status = bothErrorsExist ? 'PASSED' : 'FAILED'; console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_01', status);
-
-            // Ghi kết quả vào Excel
+            await this.takeTestResultScreenshot('DN_01', status);            // Ghi kết quả vào Excel
             excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi bỏ trống cả tài khoản và mật khẩu',
                 status: status,
-                inputData: 'Username: [EMPTY], Password: [EMPTY]',
+                inputData: 'Username: "", Password: ""',
                 expectedResult: 'Hiển thị thông báo lỗi cho cả username và password',
                 actualResult: errorMessages.length > 0 ? errorMessages.join(', ') : 'HTML5 validation hoặc không có thông báo hiển thị'
             });
@@ -221,13 +218,10 @@ class LoginActions {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_01', 'FAILED');
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_01', 'FAILED');            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi bỏ trống cả tài khoản và mật khẩu',
                 status: 'FAILED',
-                inputData: 'Username: [EMPTY], Password: [EMPTY]',
+                inputData: 'Username: "", Password: ""',
                 expectedResult: 'Hiển thị thông báo lỗi cho cả username và password',
                 actualResult: `Test thất bại: ${error.message}`
             });
@@ -249,14 +243,11 @@ class LoginActions {
             const status = usernameErrorExists ? 'PASSED' : 'FAILED'; console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_02', status);
-
-            // Ghi kết quả vào Excel
+            await this.takeTestResultScreenshot('DN_02', status);            // Ghi kết quả vào Excel
             excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi bỏ trống tài khoản, chỉ nhập mật khẩu',
                 status: status,
-                inputData: 'Username: [EMPTY], Password: [FILLED]',
+                inputData: `Username: "", Password: "${validPass}"`,
                 expectedResult: 'Hiển thị thông báo lỗi username',
                 actualResult: errorMessages.length > 0 ? errorMessages.join(', ') : 'HTML5 validation hoặc không có thông báo hiển thị'
             });
@@ -267,13 +258,10 @@ class LoginActions {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_02', 'FAILED');
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_02', 'FAILED');            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi bỏ trống tài khoản, chỉ nhập mật khẩu',
                 status: 'FAILED',
-                inputData: 'Username: [EMPTY], Password: [FILLED]',
+                inputData: `Username: "", Password: "${validPass}"`,
                 expectedResult: 'Hiển thị thông báo lỗi username',
                 actualResult: `Test thất bại: ${error.message}`
             });
@@ -295,14 +283,11 @@ class LoginActions {
             const status = passwordErrorExists ? 'PASSED' : 'FAILED'; console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_03', status);
-
-            // Ghi kết quả vào Excel
+            await this.takeTestResultScreenshot('DN_03', status);            // Ghi kết quả vào Excel
             excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi bỏ trống mật khẩu, chỉ nhập tài khoản',
                 status: status,
-                inputData: 'Username: [FILLED], Password: [EMPTY]',
+                inputData: `Username: "${validUsername}", Password: ""`,
                 expectedResult: 'Hiển thị thông báo lỗi password',
                 actualResult: errorMessages.length > 0 ? errorMessages.join(', ') : 'HTML5 validation hoặc không có thông báo hiển thị'
             });
@@ -313,13 +298,10 @@ class LoginActions {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_03', 'FAILED');
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_03', 'FAILED');            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi bỏ trống mật khẩu, chỉ nhập tài khoản',
                 status: 'FAILED',
-                inputData: 'Username: [FILLED], Password: [EMPTY]',
+                inputData: `Username: "${validUsername}", Password: ""`,
                 expectedResult: 'Hiển thị thông báo lỗi password',
                 actualResult: `Test thất bại: ${error.message}`
             });
@@ -342,13 +324,10 @@ class LoginActions {
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_04', status);
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_04', status);            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi đăng nhập với tài khoản chưa đăng ký',
                 status: status,
-                inputData: 'Username: [UNREGISTERED], Password: [VALID]',
+                inputData: `Username: "${invalidUsername}", Password: "${validPass}"`,
                 expectedResult: 'Hiển thị thông báo "Tên đăng nhập hoặc mật khẩu không đúng."',
                 actualResult: errorMessages.length > 0 ? errorMessages.join(', ') : 'Không có thông báo lỗi hiển thị'
             });
@@ -358,13 +337,10 @@ class LoginActions {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_04', 'FAILED');
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_04', 'FAILED');            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi đăng nhập với tài khoản chưa đăng ký',
                 status: 'FAILED',
-                inputData: 'Username: [UNREGISTERED], Password: [VALID]',
+                inputData: `Username: "${invalidUsername}", Password: "${validPass}"`,
                 expectedResult: 'Hiển thị thông báo "Tên đăng nhập hoặc mật khẩu không đúng."',
                 actualResult: `Test thất bại: ${error.message}`
             });
@@ -389,13 +365,10 @@ class LoginActions {
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_05', status);
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_05', status);            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi đăng nhập với mật khẩu sai',
                 status: status,
-                inputData: 'Username: [VALID], Password: [INVALID]',
+                inputData: `Username: "${validUsername}", Password: "${invalidPass}"`,
                 expectedResult: 'Hiển thị thông báo "Tên đăng nhập hoặc mật khẩu không đúng."',
                 actualResult: errorMessages.length > 0 ? errorMessages.join(', ') : 'Không có thông báo lỗi hiển thị'
             });
@@ -405,13 +378,10 @@ class LoginActions {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_05', 'FAILED');
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_05', 'FAILED');            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi đăng nhập với mật khẩu sai',
                 status: 'FAILED',
-                inputData: 'Username: [VALID], Password: [INVALID]',
+                inputData: `Username: "${validUsername}", Password: "${invalidPass}"`,
                 expectedResult: 'Hiển thị thông báo "Tên đăng nhập hoặc mật khẩu không đúng."',
                 actualResult: `Test thất bại: ${error.message}`
             });
@@ -441,13 +411,10 @@ class LoginActions {
             const errorMessages = await this.getVisibleErrorMessages();
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_06', testCaseStatus);
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_06', testCaseStatus);            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi đăng nhập với tài khoản viết in hoa',
                 status: testCaseStatus,
-                inputData: `Username: [${uppercaseUsername}], Password: [VALID]`,
+                inputData: `Username: "${uppercaseUsername}", Password: "${validPass}"`,
                 expectedResult: 'Hiển thị thông báo "Tên đăng nhập hoặc mật khẩu không đúng."',
                 actualResult: isLoginSuccessful ? 'Đăng nhập thành công (không mong muốn)' : (errorMessages.length > 0 ? errorMessages.join(', ') : 'Không có thông báo lỗi hiển thị')
             });// Không throw error - chỉ log kết quả test case
@@ -462,13 +429,10 @@ class LoginActions {
             }
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_06', 'FAILED');
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_06', 'FAILED');            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi đăng nhập với tài khoản viết in hoa',
                 status: 'FAILED',
-                inputData: 'Username: [UPPERCASE], Password: [VALID]',
+                inputData: `Username: "${validUsername.toUpperCase()}", Password: "${validPass}"`,
                 expectedResult: 'Hiển thị thông báo "Tên đăng nhập hoặc mật khẩu không đúng."',
                 actualResult: `Test thất bại: ${error.message}`
             });
@@ -498,13 +462,10 @@ class LoginActions {
                 console.log(`✅ ${testName}: ${status} (Hệ thống không phân biệt case)`);
 
                 // Chụp screenshot kết quả test
-                await this.takeTestResultScreenshot('DN_07', status);
-
-                excelReporter.addTestResult({
+                await this.takeTestResultScreenshot('DN_07', status);                excelReporter.addTestResult({
                     testName: testName,
-                    description: 'Kiểm tra đăng nhập với mật khẩu viết in hoa',
                     status: status,
-                    inputData: `Username: [${validUsername}], Password: [UPPERCASE]`,
+                    inputData: `Username: "${validUsername}", Password: "${validPass.toUpperCase()}"`,
                     expectedResult: 'Hiển thị thông báo lỗi hoặc đăng nhập thành công tùy theo cấu hình hệ thống',
                     actualResult: 'Đăng nhập thành công - Hệ thống không phân biệt chữ hoa/thường cho mật khẩu'
                 });
@@ -522,13 +483,10 @@ class LoginActions {
                 console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
                 // Chụp screenshot kết quả test
-                await this.takeTestResultScreenshot('DN_07', status);
-
-                excelReporter.addTestResult({
+                await this.takeTestResultScreenshot('DN_07', status);                excelReporter.addTestResult({
                     testName: testName,
-                    description: 'Kiểm tra thông báo lỗi khi đăng nhập với mật khẩu viết in hoa',
                     status: status,
-                    inputData: `Username: [${validUsername}], Password: [UPPERCASE]`,
+                    inputData: `Username: "${validUsername}", Password: "${uppercasePassword}"`,
                     expectedResult: 'Hiển thị thông báo "Tên đăng nhập hoặc mật khẩu không đúng."',
                     actualResult: errorMessages.length > 0 ? errorMessages.join(', ') : 'Không có thông báo lỗi hiển thị'
                 });
@@ -550,16 +508,13 @@ class LoginActions {
             }
 
             // Chụ screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_07', 'FAILED');
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_07', 'FAILED');            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra đăng nhập với mật khẩu viết in hoa',
                 status: 'FAILED',
-                inputData: `Username: [${validUsername}], Password: [UPPERCASE]`,
+                inputData: `Username: "${validUsername}", Password: "${validPass.toUpperCase()}"`,
                 expectedResult: 'Hiển thị thông báo lỗi hoặc đăng nhập thành công tùy theo cấu hình hệ thống',
                 actualResult: `Test thất bại: ${error.message}`
-            });            // Không throw error - chỉ log kết quả test case
+            });// Không throw error - chỉ log kết quả test case
             // Test suite vẫn tiếp tục chạy bình thường
         }
     }
@@ -582,13 +537,10 @@ class LoginActions {
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_08', status);
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_08', status);            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi đăng nhập với tài khoản chứa 1 ký tự',
                 status: status,
-                inputData: 'Username: [1 CHARACTER], Password: [VALID]',
+                inputData: `Username: "${shortUsername}", Password: "${validPass}"`,
                 expectedResult: 'Hiển thị thông báo "Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới (3-50 ký tự)."',
                 actualResult: errorMessages.length > 0 ? errorMessages.join(', ') : 'Không có thông báo lỗi hiển thị'
             });
@@ -597,13 +549,10 @@ class LoginActions {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_08', 'FAILED');
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_08', 'FAILED');            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi đăng nhập với tài khoản chứa 1 ký tự',
                 status: 'FAILED',
-                inputData: 'Username: [1 CHARACTER], Password: [VALID]',
+                inputData: `Username: "a", Password: "${validPass}"`,
                 expectedResult: 'Hiển thị thông báo "Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới (3-50 ký tự)."',
                 actualResult: `Test thất bại: ${error.message}`
             });
@@ -632,9 +581,8 @@ class LoginActions {
 
             excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi đăng nhập với mật khẩu 1 ký tự',
-                status: status,
-                inputData: 'Username: [VALID], Password: [1 CHARACTER]',
+                status: status,                
+                inputData: `Username: "${validUsername}", Password: "a"`,
                 expectedResult: 'Hiển thị thông báo "Mật khẩu phải có ít nhất 6 ký tự."',
                 actualResult: errorMessages.length > 0 ? errorMessages.join(', ') : 'Không có thông báo lỗi hiển thị'
             });
@@ -647,9 +595,8 @@ class LoginActions {
 
             excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi đăng nhập với mật khẩu 1 ký tự',
-                status: 'FAILED',
-                inputData: 'Username: [VALID], Password: [1 CHARACTER]',
+                status: 'FAILED',                
+                inputData: `Username: "${validUsername}", Password: "a"`,
                 expectedResult: 'Hiển thị thông báo "Mật khẩu phải có ít nhất 6 ký tự."',
                 actualResult: `Test thất bại: ${error.message}`
             });
@@ -674,13 +621,10 @@ class LoginActions {
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_10', status);
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_10', status);            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi đăng nhập với tài khoản chứa 100 ký tự',
                 status: status,
-                inputData: 'Username: [100 CHARACTERS], Password: [VALID]',
+                inputData: `Username: "${longUsername}", Password: "${validPass}"`,
                 expectedResult: 'Hiển thị thông báo "Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới (3-50 ký tự)."',
                 actualResult: errorMessages.length > 0 ? errorMessages.join(', ') : 'Không có thông báo lỗi hiển thị'
             });
@@ -689,13 +633,10 @@ class LoginActions {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_10', 'FAILED');
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_10', 'FAILED');            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi đăng nhập với tài khoản chứa 100 ký tự',
                 status: 'FAILED',
-                inputData: 'Username: [100 CHARACTERS], Password: [VALID]',
+                inputData: `Username: "${'a'.repeat(100)}", Password: "${validPass}"`,
                 expectedResult: 'Hiển thị thông báo "Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới (3-50 ký tự)."',
                 actualResult: `Test thất bại: ${error.message}`
             });
@@ -720,13 +661,10 @@ class LoginActions {
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_11', status);
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_11', status);            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi đăng nhập với tài khoản chứa ký tự đặc biệt',
                 status: status,
-                inputData: 'Username: [SPECIAL CHARACTERS], Password: [VALID]',
+                inputData: `Username: "${specialCharUsername}", Password: "${validPass}"`,
                 expectedResult: 'Hiển thị thông báo "Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới (3-50 ký tự)."',
                 actualResult: errorMessages.length > 0 ? errorMessages.join(', ') : 'Không có thông báo lỗi hiển thị'
             });
@@ -735,13 +673,10 @@ class LoginActions {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_11', 'FAILED');
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_11', 'FAILED');            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo lỗi khi đăng nhập với tài khoản chứa ký tự đặc biệt',
                 status: 'FAILED',
-                inputData: 'Username: [SPECIAL CHARACTERS], Password: [VALID]',
+                inputData: `Username: "user@#$%", Password: "${validPass}"`,
                 expectedResult: 'Hiển thị thông báo "Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới (3-50 ký tự)."',
                 actualResult: `Test thất bại: ${error.message}`
             });
@@ -799,16 +734,13 @@ class LoginActions {
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_12', status);
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_12', status);            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra đăng nhập thành công với thông tin hợp lệ',
                 status: status,
-                inputData: 'Username: [VALID], Password: [VALID]',
+                inputData: `Username: "${validUsername}", Password: "${validPass}"`,
                 expectedResult: 'Đăng nhập thành công, chuyển hướng đến trang chủ',
                 actualResult: isLoginSuccessful ? 'Đăng nhập thành công' : 'Đăng nhập thất bại'
-            });            // Đăng xuất để chuẩn bị cho test case tiếp theo
+            });// Đăng xuất để chuẩn bị cho test case tiếp theo
             if (isLoginSuccessful) {
                 const logoutSuccess = await this.logout();
             }
@@ -822,13 +754,10 @@ class LoginActions {
             }
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_12', 'FAILED');
-
-            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_12', 'FAILED');            excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra đăng nhập thành công với thông tin hợp lệ',
                 status: 'FAILED',
-                inputData: 'Username: [VALID], Password: [VALID]',
+                inputData: `Username: "${validUsername}", Password: "${validPass}"`,
                 expectedResult: 'Đăng nhập thành công, chuyển hướng đến trang chủ',
                 actualResult: `Test thất bại: ${error.message}`
             });
@@ -866,7 +795,6 @@ class LoginActions {
 
             excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo khóa tài khoản sau 6 lần đăng nhập sai',
                 status: status,
                 inputData: '6 lần đăng nhập với mật khẩu sai liên tiếp',
                 expectedResult: 'Hiển thị thông báo "Quá nhiều lần đăng nhập sai. Vui lòng thử lại sau 15 phút."',
@@ -881,7 +809,6 @@ class LoginActions {
 
             excelReporter.addTestResult({
                 testName: testName,
-                description: 'Kiểm tra thông báo khóa tài khoản sau 6 lần đăng nhập sai',
                 status: 'FAILED',
                 inputData: '6 lần đăng nhập với mật khẩu sai liên tiếp',
                 expectedResult: 'Hiển thị thông báo "Quá nhiều lần đăng nhập sai. Vui lòng thử lại sau 15 phút."',

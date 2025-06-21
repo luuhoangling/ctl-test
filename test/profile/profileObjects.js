@@ -21,16 +21,18 @@ module.exports = {
             currentPassword: 'password123',
             newPassword: 'newpassword123',
             confirmPassword: 'newpassword123'
-        },        // Thông tin người dùng không hợp lệ - Invalid user information
+        },        
+        // Thông tin người dùng không hợp lệ - Invalid user information
         invalidUserInfo: {
             invalidEmail: 'invalid-email',
-            usedEmail: "dm.phuong@hehe.com",
+            usedEmail: "dm.phuong@hehe.con",
             wrongCurrentPassword: 'wrongpassword',
             shortNewPassword: '123',
             mismatchConfirmPassword: 'differentpassword'
-        },        // Thông báo lỗi mong đợi - Expected error messages
+        },        
+        // Thông báo lỗi mong đợi - Expected error messages
         errorMessages: {
-            wrongCurrentPassword: 'Mật khẩu hiện tại không đúng',
+            wrongCurrentPassword: 'Mật khẩu hiện tại không đúng.',
             shortPassword: 'Mật khẩu mới phải có ít nhất 6 ký tự.',
             passwordMismatch: 'Mật khẩu xác nhận không khớp với mật khẩu mới.',
             updateSuccess: 'Cập nhật thông tin thành công',
@@ -71,14 +73,17 @@ module.exports = {
 
     // Dynamic Error Messages (JavaScript Generated) - Thông báo lỗi động
     // Lỗi họ và tên
-    fullnameError: () => $('[data-testid="full_name-error"]'),
+    fullnameError: () => $('[data-testid="full_name-error"]'),    // Lỗi email
+    emailError: () => $('[data-testid="email-error"]'),
 
-    // Lỗi email
-    emailError: () => $('[data-testid="email-error"]'),    // Lỗi mật khẩu hiện tại
+    // Lỗi mật khẩu hiện tại
     currentPasswordError: () => $('[data-testid="current_password-error"]'),
 
+    // Lỗi mật khẩu mới
+    newPasswordError: () => $('[data-testid="new_password-error"]'),
+
     // Lỗi xác nhận mật khẩu
-    confirmPasswordError: () => $('[data-testid="confirm_password-error"]'),    // Helper methods - Các phương thức hỗ trợ
+    confirmPasswordError: () => $('[data-testid="confirm_password-error"]'),// Helper methods - Các phương thức hỗ trợ
 
     // Lấy text của thông báo lỗi
     async getErrorMessage(errorSelector) {

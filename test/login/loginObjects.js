@@ -13,7 +13,7 @@ module.exports = {
     },// Login-specific wait times object - All timing configurations in one place
     waitTimes: {
         // Basic wait times
-        defaultWait: 1000,                      // Default wait time
+        defaultWait: 500,                      // Default wait time
         submitWait: 1500,                      // Wait after form submission
         elementWait: 20000,                     // Wait for element to appear
     },loginUsernameInputField: () => $('#username'),
