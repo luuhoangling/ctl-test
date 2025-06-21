@@ -450,24 +450,25 @@ class LoginActions {
             const isLoginSuccessful = await this.verifySuccessfulLogin();
 
             if (isLoginSuccessful) {
-                // Nếu đăng nhập thành công, hệ thống không phân biệt case-sensitive cho password
-                console.log(`⚠️  ${testName}: Hệ thống không phân biệt chữ hoa/thường cho mật khẩu`);
+                // Nếu đăng nhập thành công với mật khẩu viết hoa → Test case FAILED
+                // Vì theo yêu cầu, mật khẩu viết hoa không nên cho phép đăng nhập thành công
+                console.log(`❌ ${testName}: Đăng nhập thành công với mật khẩu viết hoa (không mong muốn)`);
 
                 // Đăng xuất để tiếp tục test cases khác
                 const logoutSuccess = await this.logout();
                 console.log(`🔄 Đã đăng xuất để tiếp tục test: ${logoutSuccess ? 'Thành công' : 'Thất bại'}`);
 
-                // Test case PASSED vì hệ thống cho phép đăng nhập với password uppercase
-                const status = 'PASSED';
-                console.log(`✅ ${testName}: ${status} (Hệ thống không phân biệt case)`);
+                // Test case FAILED vì hệ thống cho phép đăng nhập với password sai case
+                const status = 'FAILED';
+                console.log(`❌ ${testName}: ${status} - Hệ thống không nên chấp nhận mật khẩu viết sai case`);
 
                 // Chụp screenshot kết quả test
                 await this.takeTestResultScreenshot('DN_07', status);                excelReporter.addTestResult({
                     testName: testName,
                     status: status,
                     inputData: `Username: "${validUsername}", Password: "${validPass.toUpperCase()}"`,
-                    expectedResult: 'Hiển thị thông báo lỗi hoặc đăng nhập thành công tùy theo cấu hình hệ thống',
-                    actualResult: 'Đăng nhập thành công - Hệ thống không phân biệt chữ hoa/thường cho mật khẩu'
+                    expectedResult: 'Hiển thị thông báo "Tên đăng nhập hoặc mật khẩu không đúng." (mật khẩu phải case-sensitive)',
+                    actualResult: 'Đăng nhập thành công - Hệ thống chấp nhận mật khẩu viết hoa (vi phạm bảo mật)'
                 });
 
             } else {
@@ -487,7 +488,7 @@ class LoginActions {
                     testName: testName,
                     status: status,
                     inputData: `Username: "${validUsername}", Password: "${uppercasePassword}"`,
-                    expectedResult: 'Hiển thị thông báo "Tên đăng nhập hoặc mật khẩu không đúng."',
+                    expectedResult: 'Hiển thị thông báo "Tên đăng nhập hoặc mật khẩu không đúng." (mật khẩu phải case-sensitive)',
                     actualResult: errorMessages.length > 0 ? errorMessages.join(', ') : 'Không có thông báo lỗi hiển thị'
                 });
 
@@ -495,9 +496,7 @@ class LoginActions {
                 if (!hasLoginError) {
                     throw new Error('Không có thông báo lỗi phù hợp được hiển thị');
                 }
-            }
-
-        } catch (error) {
+            }        } catch (error) {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Thử đăng xuất trong trường hợp có lỗi nhưng vẫn đăng nhập được
@@ -507,12 +506,12 @@ class LoginActions {
                 // Silent logout error
             }
 
-            // Chụ screenshot kết quả test
+            // Chụp screenshot kết quả test
             await this.takeTestResultScreenshot('DN_07', 'FAILED');            excelReporter.addTestResult({
                 testName: testName,
                 status: 'FAILED',
                 inputData: `Username: "${validUsername}", Password: "${validPass.toUpperCase()}"`,
-                expectedResult: 'Hiển thị thông báo lỗi hoặc đăng nhập thành công tùy theo cấu hình hệ thống',
+                expectedResult: 'Hiển thị thông báo "Tên đăng nhập hoặc mật khẩu không đúng." (mật khẩu phải case-sensitive)',
                 actualResult: `Test thất bại: ${error.message}`
             });// Không throw error - chỉ log kết quả test case
             // Test suite vẫn tiếp tục chạy bình thường

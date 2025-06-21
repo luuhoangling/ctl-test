@@ -49,7 +49,8 @@ describe('TESTCASE - ĐĂNG NHẬP', () => {
 
     it(TEST_CASE_NAMES.DN_12, async () => {
         await loginActions.DN_12_ValidLogin();
-    });    it(TEST_CASE_NAMES.DN_13, async () => {
+    });    
+    it(TEST_CASE_NAMES.DN_13, async () => {
         await loginActions.DN_13_MultipleFailedLogins();
     });
 

@@ -14,7 +14,6 @@
     "clear-login-screenshots": "node clearScreenshots.js login",
     "clear-profile-screenshots": "node clearScreenshots.js profile",
     "clear-search-screenshots": "node clearScreenshots.js search",
-    "screenshot-demo": "node screenshotDemo.js",
     "env:local": "powershell -ExecutionPolicy Bypass -File scripts/switch-env.ps1 -Environment local",
     "env:dev": "powershell -ExecutionPolicy Bypass -File scripts/switch-env.ps1 -Environment dev",
     "env:staging": "powershell -ExecutionPolicy Bypass -File scripts/switch-env.ps1 -Environment staging",
@@ -28,7 +27,7 @@
     "node-xlsx",
     "data-driven"
   ],
-  "author": "hridoy_das",
+  "author": "luu hoang linh",
   "license": "ISC",
   "devDependencies": {
     "@wdio/cli": "^8.17.0",
