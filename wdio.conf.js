@@ -1,6 +1,8 @@
 require('dotenv').config();
 const testConfig = require('./config/testConfig');
 
+
+// cấu hình WebdriverIO cho các testcase
 const login = './test/login/login.spec.js';
 const search = './test/search/search.spec.js';
 const profile = './test/profile/profile.spec.js';

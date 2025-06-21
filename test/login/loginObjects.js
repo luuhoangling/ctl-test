@@ -5,18 +5,19 @@ module.exports = {
     credentials: {
         valid: {
             username: 'phuong123',
-            password: 'phuong123'        },
+            password: 'phuong123'
+        },
         invalid: {
             username: 'phuong1993',
             password: 'matkhausai'
         }
     },// Login-specific wait times object - All timing configurations in one place
     waitTimes: {
-        // Basic wait times
-        defaultWait: 500,                      // Default wait time
-        submitWait: 1500,                      // Wait after form submission
+        defaultWait: 250,                      // Default wait time
+        submitWait: 1000,                      // Wait after form submission
         elementWait: 20000,                     // Wait for element to appear
-    },loginUsernameInputField: () => $('#username'),
+    }, 
+    loginUsernameInputField: () => $('#username'),
     loginPasswordInputField: () => $('#password'),
     loginButton: () => $('#loginBtn'),
 
@@ -34,7 +35,7 @@ module.exports = {
         ],
         invalidUsername: [
             'Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới (3-50 ký tự)'
-        ],        invalidPassword: [
+        ], invalidPassword: [
             'Mật khẩu phải có ít nhất 6 ký tự'
         ],
         accountLocked: [

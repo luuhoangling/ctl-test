@@ -218,7 +218,7 @@ class LoginActions {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_01', 'FAILED');            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_01', 'FAILED'); excelReporter.addTestResult({
                 testName: testName,
                 status: 'FAILED',
                 inputData: 'Username: "", Password: ""',
@@ -258,7 +258,7 @@ class LoginActions {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_02', 'FAILED');            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_02', 'FAILED'); excelReporter.addTestResult({
                 testName: testName,
                 status: 'FAILED',
                 inputData: `Username: "", Password: "${validPass}"`,
@@ -298,7 +298,7 @@ class LoginActions {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_03', 'FAILED');            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_03', 'FAILED'); excelReporter.addTestResult({
                 testName: testName,
                 status: 'FAILED',
                 inputData: `Username: "${validUsername}", Password: ""`,
@@ -324,7 +324,7 @@ class LoginActions {
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_04', status);            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_04', status); excelReporter.addTestResult({
                 testName: testName,
                 status: status,
                 inputData: `Username: "${invalidUsername}", Password: "${validPass}"`,
@@ -337,7 +337,7 @@ class LoginActions {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_04', 'FAILED');            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_04', 'FAILED'); excelReporter.addTestResult({
                 testName: testName,
                 status: 'FAILED',
                 inputData: `Username: "${invalidUsername}", Password: "${validPass}"`,
@@ -365,7 +365,7 @@ class LoginActions {
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_05', status);            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_05', status); excelReporter.addTestResult({
                 testName: testName,
                 status: status,
                 inputData: `Username: "${validUsername}", Password: "${invalidPass}"`,
@@ -378,7 +378,7 @@ class LoginActions {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_05', 'FAILED');            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_05', 'FAILED'); excelReporter.addTestResult({
                 testName: testName,
                 status: 'FAILED',
                 inputData: `Username: "${validUsername}", Password: "${invalidPass}"`,
@@ -401,23 +401,33 @@ class LoginActions {
             await sleep(1000);
 
             // Kiểm tra đăng nhập thành công
-            const isLoginSuccessful = await this.verifySuccessfulLogin();            // Nếu đăng nhập thành công thì test case này FAIL (vì mong đợi là thất bại)
-            // Nhưng test suite vẫn PASS (không throw error)
-            const testCaseStatus = !isLoginSuccessful ? 'PASSED' : 'FAILED';
-            console.log(`${testCaseStatus === 'PASSED' ? '✅' : '❌'} ${testName}: ${testCaseStatus}`);            // Nếu đăng nhập thành công (không mong muốn), cần đăng xuất để test tiếp theo
-            if (isLoginSuccessful) {
-                const logoutSuccess = await this.logout();
-            }// Lấy thông báo lỗi nếu có
+            const isLoginSuccessful = await this.verifySuccessfulLogin();
+            
+            // Lấy thông báo lỗi nếu có
             const errorMessages = await this.getVisibleErrorMessages();
 
-            // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_06', testCaseStatus);            excelReporter.addTestResult({
+            // Nếu đăng nhập thành công thì test case này FAIL (vì mong đợi là thất bại)
+            // Nhưng test suite vẫn PASS (không throw error)
+            const testCaseStatus = !isLoginSuccessful ? 'PASSED' : 'FAILED';
+            console.log(`${testCaseStatus === 'PASSED' ? '✅' : '❌'} ${testName}: ${testCaseStatus}`);
+
+            // Chụp screenshot kết quả test TRƯỚC KHI đăng xuất
+            await this.takeTestResultScreenshot('DN_06', testCaseStatus);
+
+            excelReporter.addTestResult({
                 testName: testName,
                 status: testCaseStatus,
                 inputData: `Username: "${uppercaseUsername}", Password: "${validPass}"`,
                 expectedResult: 'Hiển thị thông báo "Tên đăng nhập hoặc mật khẩu không đúng."',
                 actualResult: isLoginSuccessful ? 'Đăng nhập thành công (không mong muốn)' : (errorMessages.length > 0 ? errorMessages.join(', ') : 'Không có thông báo lỗi hiển thị')
-            });// Không throw error - chỉ log kết quả test case
+            });
+
+            // Nếu đăng nhập thành công (không mong muốn), cần đăng xuất để test tiếp theo
+            if (isLoginSuccessful) {
+                const logoutSuccess = await this.logout();
+            }
+
+            // Không throw error - chỉ log kết quả test case
             // Test suite vẫn tiếp tục chạy bình thường
 
         } catch (error) {
@@ -429,7 +439,7 @@ class LoginActions {
             }
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_06', 'FAILED');            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_06', 'FAILED'); excelReporter.addTestResult({
                 testName: testName,
                 status: 'FAILED',
                 inputData: `Username: "${validUsername.toUpperCase()}", Password: "${validPass}"`,
@@ -439,7 +449,8 @@ class LoginActions {
 
             // Không throw error - chỉ log kết quả
         }
-    }    // DN_07: Kiểm tra đăng nhập với mật khẩu viết in hoa, tài khoản đúng
+    }    
+    // DN_07: Kiểm tra đăng nhập với mật khẩu viết in hoa, tài khoản đúng
     async DN_07_UppercasePassword() {
         const testName = 'DN_07: Kiểm tra đăng nhập với mật khẩu viết in hoa, tài khoản đúng';
 
@@ -448,28 +459,26 @@ class LoginActions {
             const uppercasePassword = validPass.toUpperCase();
             await this.login(validUsername, uppercasePassword);            // Kiểm tra xem đăng nhập có thành công không
             const isLoginSuccessful = await this.verifySuccessfulLogin();
-
+            
             if (isLoginSuccessful) {
-                // Nếu đăng nhập thành công với mật khẩu viết hoa → Test case FAILED
-                // Vì theo yêu cầu, mật khẩu viết hoa không nên cho phép đăng nhập thành công
-                console.log(`❌ ${testName}: Đăng nhập thành công với mật khẩu viết hoa (không mong muốn)`);
-
-                // Đăng xuất để tiếp tục test cases khác
-                const logoutSuccess = await this.logout();
-                console.log(`🔄 Đã đăng xuất để tiếp tục test: ${logoutSuccess ? 'Thành công' : 'Thất bại'}`);
-
                 // Test case FAILED vì hệ thống cho phép đăng nhập với password sai case
                 const status = 'FAILED';
-                console.log(`❌ ${testName}: ${status} - Hệ thống không nên chấp nhận mật khẩu viết sai case`);
+                console.log(`❌ ${testName}: Đăng nhập thành công với mật khẩu viết hoa (không mong muốn)`);
 
-                // Chụp screenshot kết quả test
-                await this.takeTestResultScreenshot('DN_07', status);                excelReporter.addTestResult({
+                // Chụp screenshot kết quả test TRƯỚC KHI đăng xuất
+                await this.takeTestResultScreenshot('DN_07', status);
+
+                excelReporter.addTestResult({
                     testName: testName,
                     status: status,
                     inputData: `Username: "${validUsername}", Password: "${validPass.toUpperCase()}"`,
                     expectedResult: 'Hiển thị thông báo "Tên đăng nhập hoặc mật khẩu không đúng." (mật khẩu phải case-sensitive)',
                     actualResult: 'Đăng nhập thành công - Hệ thống chấp nhận mật khẩu viết hoa (vi phạm bảo mật)'
                 });
+
+                // Đăng xuất để tiếp tục test cases khác
+                const logoutSuccess = await this.logout();
+                console.log(`🔄 Đã đăng xuất để tiếp tục test: ${logoutSuccess ? 'Thành công' : 'Thất bại'}`);
 
             } else {
                 // Nếu đăng nhập thất bại, kiểm tra thông báo lỗi
@@ -484,7 +493,7 @@ class LoginActions {
                 console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
                 // Chụp screenshot kết quả test
-                await this.takeTestResultScreenshot('DN_07', status);                excelReporter.addTestResult({
+                await this.takeTestResultScreenshot('DN_07', status); excelReporter.addTestResult({
                     testName: testName,
                     status: status,
                     inputData: `Username: "${validUsername}", Password: "${uppercasePassword}"`,
@@ -496,7 +505,8 @@ class LoginActions {
                 if (!hasLoginError) {
                     throw new Error('Không có thông báo lỗi phù hợp được hiển thị');
                 }
-            }        } catch (error) {
+            }
+        } catch (error) {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Thử đăng xuất trong trường hợp có lỗi nhưng vẫn đăng nhập được
@@ -507,7 +517,7 @@ class LoginActions {
             }
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_07', 'FAILED');            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_07', 'FAILED'); excelReporter.addTestResult({
                 testName: testName,
                 status: 'FAILED',
                 inputData: `Username: "${validUsername}", Password: "${validPass.toUpperCase()}"`,
@@ -536,7 +546,7 @@ class LoginActions {
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_08', status);            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_08', status); excelReporter.addTestResult({
                 testName: testName,
                 status: status,
                 inputData: `Username: "${shortUsername}", Password: "${validPass}"`,
@@ -548,7 +558,7 @@ class LoginActions {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_08', 'FAILED');            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_08', 'FAILED'); excelReporter.addTestResult({
                 testName: testName,
                 status: 'FAILED',
                 inputData: `Username: "a", Password: "${validPass}"`,
@@ -580,7 +590,7 @@ class LoginActions {
 
             excelReporter.addTestResult({
                 testName: testName,
-                status: status,                
+                status: status,
                 inputData: `Username: "${validUsername}", Password: "a"`,
                 expectedResult: 'Hiển thị thông báo "Mật khẩu phải có ít nhất 6 ký tự."',
                 actualResult: errorMessages.length > 0 ? errorMessages.join(', ') : 'Không có thông báo lỗi hiển thị'
@@ -594,7 +604,7 @@ class LoginActions {
 
             excelReporter.addTestResult({
                 testName: testName,
-                status: 'FAILED',                
+                status: 'FAILED',
                 inputData: `Username: "${validUsername}", Password: "a"`,
                 expectedResult: 'Hiển thị thông báo "Mật khẩu phải có ít nhất 6 ký tự."',
                 actualResult: `Test thất bại: ${error.message}`
@@ -620,7 +630,7 @@ class LoginActions {
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_10', status);            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_10', status); excelReporter.addTestResult({
                 testName: testName,
                 status: status,
                 inputData: `Username: "${longUsername}", Password: "${validPass}"`,
@@ -632,7 +642,7 @@ class LoginActions {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_10', 'FAILED');            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_10', 'FAILED'); excelReporter.addTestResult({
                 testName: testName,
                 status: 'FAILED',
                 inputData: `Username: "${'a'.repeat(100)}", Password: "${validPass}"`,
@@ -660,7 +670,7 @@ class LoginActions {
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_11', status);            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_11', status); excelReporter.addTestResult({
                 testName: testName,
                 status: status,
                 inputData: `Username: "${specialCharUsername}", Password: "${validPass}"`,
@@ -672,7 +682,7 @@ class LoginActions {
             console.log(`❌ ${testName}: FAILED - ${error.message}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_11', 'FAILED');            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_11', 'FAILED'); excelReporter.addTestResult({
                 testName: testName,
                 status: 'FAILED',
                 inputData: `Username: "user@#$%", Password: "${validPass}"`,
@@ -688,22 +698,16 @@ class LoginActions {
             const currentUrl = await browser.getUrl();
 
             // Kiểm tra URL không còn chứa "login"
-            if (!currentUrl.includes('login')) {
+            if (currentUrl.includes('index')) {
                 return true;
             }
 
-            // Hoặc kiểm tra element dashboard có tồn tại không
-            try {
-                const dashboardElement = await loginObjects.dashboardElement();
-                await dashboardElement.waitForDisplayed({ timeout: 2000 });
-                return await dashboardElement.isDisplayed();
-            } catch (error) {
-                return false;
-            }
         } catch (error) {
             return false;
         }
-    } async logout() {
+    } 
+    
+    async logout() {
         try {
             // Đăng xuất trực tiếp bằng URL - đơn giản và đáng tin cậy
             const logoutUrl = testConfig.baseUrl + '/logout.php';
@@ -733,7 +737,7 @@ class LoginActions {
             console.log(`${status === 'PASSED' ? '✅' : '❌'} ${testName}: ${status}`);
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_12', status);            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_12', status); excelReporter.addTestResult({
                 testName: testName,
                 status: status,
                 inputData: `Username: "${validUsername}", Password: "${validPass}"`,
@@ -753,7 +757,7 @@ class LoginActions {
             }
 
             // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('DN_12', 'FAILED');            excelReporter.addTestResult({
+            await this.takeTestResultScreenshot('DN_12', 'FAILED'); excelReporter.addTestResult({
                 testName: testName,
                 status: 'FAILED',
                 inputData: `Username: "${validUsername}", Password: "${validPass}"`,
@@ -761,7 +765,8 @@ class LoginActions {
                 actualResult: `Test thất bại: ${error.message}`
             });
         }
-    }    // DN_13: Kiểm tra đăng nhập sai quá 5 lần liên tiếp
+    }    
+    // DN_13: Kiểm tra đăng nhập sai quá 5 lần liên tiếp
     async DN_13_MultipleFailedLogins() {
         const testName = 'DN_13: Kiểm tra đăng nhập sai quá 5 lần liên tiếp';
 

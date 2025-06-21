@@ -3,6 +3,7 @@ const testConfig = require('../../config/testConfig');
 const expect = require("chai").expect;
 const ExcelReporter = require('../../utils/excelReporter');
 const ScreenshotUtils = require('../../utils/screenshotUtils');
+const { TEST_CASE_NAMES } = require('./testCaseNames');
 
 // Tạo instance của ExcelReporter
 const excelReporter = new ExcelReporter();
@@ -37,7 +38,7 @@ class SearchActions {
 
     // TK_01: Kiểm tra tìm kiếm với từ khóa hợp lệ
     async TK_01_ValidKeywordSearch() {
-        const testName = searchObjects.testData.testNames.TK_01;
+        const testName = TEST_CASE_NAMES.TK_01;
 
         try {
             // Step 1: Navigate to search page
@@ -107,7 +108,8 @@ class SearchActions {
                 expectedResult: 'Hiển thị sản phẩm phù hợp',
                 actualResult: `Tìm thấy ${productCount} sản phẩm`
             });
-        } catch (error) {            console.log(`TK_01: tìm kiếm "${searchObjects.testData.searchKeywords.validKeyword}" và gặp lỗi "${error.message}".`);
+        } catch (error) {
+            console.log(`TK_01: tìm kiếm "${searchObjects.testData.searchKeywords.validKeyword}" và gặp lỗi "${error.message}".`);
 
             // Chụp screenshot kết quả test
             await this.takeTestResultScreenshot('TK_01', 'FAILED');
@@ -125,7 +127,8 @@ class SearchActions {
 
     // TK_02: Kiểm tra tìm kiếm với từ khóa không có kết quả
     async TK_02_EmptyKeywordSearch() {
-        const testName = searchObjects.testData.testNames.TK_02;
+        const testName = TEST_CASE_NAMES.TK_02;
+
 
         try {
             // Step 1: Navigate to search page
@@ -165,7 +168,7 @@ class SearchActions {
 
                 // Step 9: Verify no search result items exist
                 const resultItems = await searchObjects.searchResultItems();
-                const actualItemsCount = resultItems.length;                if (actualItemsCount === 0) {
+                const actualItemsCount = resultItems.length; if (actualItemsCount === 0) {
                     console.log(`TK_02: tìm kiếm "${searchKeyword}" và tìm thấy "${productCount}" sản phẩm.`);
 
                     // Chụp screenshot kết quả test
@@ -187,10 +190,10 @@ class SearchActions {
 
             }            // If we reach here, the test should fail
             console.log(`TK_02: tìm kiếm "${searchKeyword}" và tìm thấy "${productCount}" sản phẩm (mong đợi 0).`);
-            
+
             // Chụp screenshot kết quả test
             await this.takeTestResultScreenshot('TK_02', 'FAILED');
-            
+
             excelReporter.addTestResult({
                 testName: testName,
                 description: 'Tìm kiếm với từ khóa không có kết quả',
@@ -199,7 +202,8 @@ class SearchActions {
                 expectedResult: 'Hiển thị 0 sản phẩm',
                 actualResult: `Tìm thấy ${productCount} sản phẩm`
             });
-        } catch (error) {            console.log(`TK_02: tìm kiếm "${searchObjects.testData.searchKeywords.invalidKeyword}" và gặp lỗi "${error.message}".`);
+        } catch (error) {
+            console.log(`TK_02: tìm kiếm "${searchObjects.testData.searchKeywords.invalidKeyword}" và gặp lỗi "${error.message}".`);
 
             // Chụp screenshot kết quả test
             await this.takeTestResultScreenshot('TK_02', 'FAILED');
@@ -216,7 +220,7 @@ class SearchActions {
 
     // TK_03: Kiểm tra tìm kiếm với từ khóa có dấu hoặc không dấu
     async TK_03_AccentKeywordSearch() {
-        const testName = searchObjects.testData.testNames.TK_03;
+        const testName = TEST_CASE_NAMES.TK_03;
 
         try {
             // Step 1: Test search with accented keyword
@@ -275,22 +279,22 @@ class SearchActions {
 
             // Step 4: Compare results
             const testPassed = accentedProductCount > 0 && nonAccentedProductCount > 0 &&
-                accentedProductCount === nonAccentedProductCount;            if (testPassed) {
-                console.log(`TK_03: tìm kiếm "${accentedKeyword}" (${accentedProductCount} sản phẩm) và "${nonAccentedKeyword}" (${nonAccentedProductCount} sản phẩm) - PASS`);
+                accentedProductCount === nonAccentedProductCount; if (testPassed) {
+                    console.log(`TK_03: tìm kiếm "${accentedKeyword}" (${accentedProductCount} sản phẩm) và "${nonAccentedKeyword}" (${nonAccentedProductCount} sản phẩm) - PASS`);
 
-                // Chụp screenshot kết quả test
-                await this.takeTestResultScreenshot('TK_03', 'PASSED');
+                    // Chụp screenshot kết quả test
+                    await this.takeTestResultScreenshot('TK_03', 'PASSED');
 
-                // Record successful test result
-                excelReporter.addTestResult({
-                    testName: testName,
-                    description: 'Tìm kiếm với từ khóa có dấu và không dấu',
-                    status: 'PASSED',
-                    inputData: `"${accentedKeyword}" vs "${nonAccentedKeyword}"`,
-                    expectedResult: 'Cùng số lượng sản phẩm',
-                    actualResult: `${accentedProductCount} sản phẩm cho cả hai`
-                });
-            } else {
+                    // Record successful test result
+                    excelReporter.addTestResult({
+                        testName: testName,
+                        description: 'Tìm kiếm với từ khóa có dấu và không dấu',
+                        status: 'PASSED',
+                        inputData: `"${accentedKeyword}" vs "${nonAccentedKeyword}"`,
+                        expectedResult: 'Cùng số lượng sản phẩm',
+                        actualResult: `${accentedProductCount} sản phẩm cho cả hai`
+                    });
+                } else {
                 console.log(`TK_03: tìm kiếm "${accentedKeyword}" (${accentedProductCount} sản phẩm) và "${nonAccentedKeyword}" (${nonAccentedProductCount} sản phẩm) - FAIL`);
 
                 // Chụp screenshot kết quả test
@@ -305,7 +309,8 @@ class SearchActions {
                     expectedResult: 'Cùng số lượng sản phẩm',
                     actualResult: `${accentedProductCount} vs ${nonAccentedProductCount} sản phẩm`
                 });
-            }        } catch (error) {
+            }
+        } catch (error) {
             console.log(`TK_03: gặp lỗi trong quá trình test - FAIL`);
 
             // Chụp screenshot kết quả test
@@ -322,7 +327,8 @@ class SearchActions {
         }
     }    // TK_04: Kiểm tra tìm kiếm với từ khóa rỗng
     async TK_04_EmptyKeywordSearch() {
-        const testName = 'TK_04: Kiểm tra tìm kiếm với từ khóa rỗng';
+        const testName = TEST_CASE_NAMES.TK_04;
+
 
         try {
             // Step 1: Navigate to search page
@@ -385,7 +391,7 @@ class SearchActions {
                     resultMessage = `Hiển thị "Tất Cả Sản Phẩm" với ${actualItemsCount} sản phẩm`;
                 } else {
                     resultMessage = `Hiển thị ${productCount > 0 ? productCount : actualItemsCount} sản phẩm`;
-                }                console.log(`TK_04: tìm kiếm với từ khóa rỗng - ${resultMessage} - PASS`);
+                } console.log(`TK_04: tìm kiếm với từ khóa rỗng - ${resultMessage} - PASS`);
 
                 // Chụp screenshot kết quả test
                 await this.takeTestResultScreenshot('TK_04', 'PASSED');
@@ -398,7 +404,8 @@ class SearchActions {
                     inputData: 'Từ khóa rỗng (không nhập gì)',
                     expectedResult: 'Hiển thị tất cả sản phẩm',
                     actualResult: resultMessage
-                });            } else {
+                });
+            } else {
                 console.log(`TK_04: tìm kiếm với từ khóa rỗng - Không hiển thị sản phẩm - FAIL`);
 
                 // Chụp screenshot kết quả test
@@ -413,7 +420,8 @@ class SearchActions {
                     expectedResult: 'Hiển thị tất cả sản phẩm',
                     actualResult: `Không hiển thị sản phẩm (${actualItemsCount} items, visible: ${isResultsVisible})`
                 });
-            }        } catch (error) {
+            }
+        } catch (error) {
             console.log(`TK_04: gặp lỗi trong quá trình test - FAIL`);
 
             // Chụp screenshot kết quả test
@@ -430,7 +438,8 @@ class SearchActions {
         }
     }    // TK_05: Kiểm tra lọc theo danh mục cụ thể
     async TK_05_CategoryFilter() {
-        const testName = 'TK_05: Kiểm tra lọc theo danh mục cụ thể';
+        const testName = TEST_CASE_NAMES.TK_05;
+
 
         try {
             // Step 1: Navigate to search page
@@ -503,7 +512,7 @@ class SearchActions {
             for (let i = 0; i < actualItemsCount; i++) {
                 const productCard = productCards[i];                // Get product name using searchObjects helper method
                 const titleText = await searchObjects.getProductNameFromCard(productCard);
-                
+
                 if (titleText) {
                     const titleLower = titleText.toLowerCase();
 
@@ -542,7 +551,7 @@ class SearchActions {
                     }
                 }
             }            // Step 9: Determine test result
-            const testPassed = validProducts > 0 && invalidProducts === 0;            if (testPassed) {
+            const testPassed = validProducts > 0 && invalidProducts === 0; if (testPassed) {
                 console.log(`TK_05: lọc danh mục "${targetCategory}" - Tìm thấy ${productCount} sản phẩm, ${validProducts}/${actualItemsCount} sản phẩm hợp lệ - PASS`);
 
                 // Chụp screenshot kết quả test
@@ -577,7 +586,8 @@ class SearchActions {
                     expectedResult: 'Chỉ hiển thị sản phẩm trong danh mục đã chọn',
                     actualResult: `${productCount} sản phẩm: ${validProducts} hợp lệ, ${invalidProducts} không hợp lệ`
                 });
-            }        } catch (error) {
+            }
+        } catch (error) {
             console.log(`TK_05: gặp lỗi trong quá trình test - FAIL`);
 
             // Chụp screenshot kết quả test
@@ -596,7 +606,7 @@ class SearchActions {
 
     // TK_06: Nhập khoảng giá tối thiểu và tối đa hợp lệ → Hiển thị sản phẩm nằm trong khoảng
     async TK_06_PriceRangeFilter() {
-        const testName = searchObjects.testData.testNames.TK_06;
+        const testName = TEST_CASE_NAMES.TK_06;
 
         try {
             // Step 1: Navigate to search page
@@ -682,7 +692,7 @@ class SearchActions {
             const validPercentage = totalCheckedProducts > 0 ? (validPriceProducts / totalCheckedProducts) : 0;
 
             // Pass if at least 80% of products are within price range
-            const testPassed = productCount > 0 && itemsCount > 0 && validPercentage >= 0.8;            if (testPassed) {
+            const testPassed = productCount > 0 && itemsCount > 0 && validPercentage >= 0.8; if (testPassed) {
                 console.log(`TK_06: lọc khoảng giá ${minPrice.toLocaleString('vi-VN')}-${maxPrice.toLocaleString('vi-VN')} VND - ${validPriceProducts}/${totalCheckedProducts} sản phẩm hợp lệ (${Math.round(validPercentage * 100)}%) - PASS`);
 
                 // Chụp screenshot kết quả test
@@ -709,7 +719,7 @@ class SearchActions {
                     }
                 } else {
                     failureReason = 'Không đủ điều kiện pass test';
-                }                console.log(`TK_06: lọc khoảng giá ${minPrice.toLocaleString('vi-VN')}-${maxPrice.toLocaleString('vi-VN')} VND - ${failureReason} - FAIL`);
+                } console.log(`TK_06: lọc khoảng giá ${minPrice.toLocaleString('vi-VN')}-${maxPrice.toLocaleString('vi-VN')} VND - ${failureReason} - FAIL`);
 
                 // Chụp screenshot kết quả test
                 await this.takeTestResultScreenshot('TK_06', 'FAILED');
@@ -723,7 +733,8 @@ class SearchActions {
                     expectedResult: 'Hiển thị sản phẩm trong khoảng giá',
                     actualResult: `${productCount} sản phẩm: ${validPriceProducts} hợp lệ, ${invalidPriceProducts} không hợp lệ. ${failureReason}`
                 });
-            }        } catch (error) {
+            }
+        } catch (error) {
             console.log(`TK_06: gặp lỗi trong quá trình test - FAIL`);
 
             // Chụp screenshot kết quả test
@@ -738,137 +749,12 @@ class SearchActions {
                 actualResult: `Lỗi trong quá trình test: ${error.message}`
             });
         }
-    }    // TK_07_AllCategoryFilter: Chọn lại "Tất cả danh mục" → Hiển thị toàn bộ sản phẩm
-    async TK_07_AllCategoryFilter() {
-        const testName = searchObjects.testData.testNames.TK_07_AllCategory;
-
-        try {
-            // Note: This test runs after TK_06, so the page is currently filtered by "Quần" category
-            // Step 1: Wait for category selector to be available
-            const categorySelect = await searchObjects.categoryFilterSelect();
-            await this.waitForElementToBeVisible(categorySelect);            // Step 2: Change to "Tất cả danh mục" (All categories) from searchObjects config
-            const allCategoriesText = searchObjects.testData.categoryConfig.allCategoriesText;
-            let categorySelected = false;
-
-            try {
-                // Try to select by visible text first
-                await categorySelect.selectByVisibleText(allCategoriesText);
-                categorySelected = true;
-            } catch (error) {
-                // Try alternative approaches - look for first option or value="0"
-                try {
-                    await categorySelect.selectByIndex(0); // Usually first option is "All"
-                    categorySelected = true;
-                } catch (indexError) {
-                    // Try selecting by value
-                    try {
-                        await categorySelect.selectByAttribute('value', '0');
-                        categorySelected = true;
-                    } catch (valueError) {                        // Try finding options with common "all" keywords
-                        const options = await searchObjects.categoryOptions();
-                        for (let option of options) {
-                            const optionText = await option.getText();
-                            const optionValue = await option.getAttribute('value');
-                            if (optionText.toLowerCase().includes('tất cả') ||
-                                optionText.toLowerCase().includes('all') ||
-                                optionValue === '0' || optionValue === '') {
-                                await option.click();
-                                categorySelected = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (!categorySelected) {
-                throw new Error('Không thể chọn "Tất cả danh mục"');
-            }
-
-            // Step 3: Apply filter
-            const applyFiltersBtn = await searchObjects.applyFiltersBtn();
-            if (await applyFiltersBtn.isDisplayed()) {
-                await this.safeClick(applyFiltersBtn);
-            }
-
-            await browser.pause(searchObjects.searchWaitTimes.searchSubmit);            // Step 4: Check for product count message or "Tất Cả Sản Phẩm" text
-            let productCount = 0;
-            let hasAllProductsText = false;
-
-            try {
-                productCount = await searchObjects.waitForProductCountMessage(8000);            } catch (error) {
-                // If no product count message, check for "Tất Cả Sản Phẩm" text
-                try {
-                    const pageTitle = await searchObjects.searchResultsTitle();
-                    if (await pageTitle.isDisplayed()) {
-                        const titleText = await pageTitle.getText();
-                        hasAllProductsText = titleText.toLowerCase().includes('tất cả sản phẩm') ||
-                            titleText.toLowerCase().includes('all products');
-                    }
-                } catch (titleError) {
-                    // Continue to check results anyway
-                }
-            }
-
-            // Step 5: Verify search results are displayed
-            const isResultsVisible = await searchObjects.waitForSearchResults(15000);
-            const productCards = await searchObjects.productCards();
-            const itemsCount = productCards.length;
-
-            console.log(`TK_07: Chọn "Tất cả danh mục" - Tìm thấy ${productCount} sản phẩm`);
-
-            // Step 6: Determine test result - Pass if has "Tất Cả Sản Phẩm" text or products displayed
-            const testPassed = (productCount > 0 || itemsCount > 0 || hasAllProductsText) && isResultsVisible; if (testPassed) {
-                let resultMessage = '';
-                if (hasAllProductsText) {
-                    resultMessage = `Hiển thị "Tất Cả Sản Phẩm" với ${itemsCount} sản phẩm`;
-                } else {
-                    resultMessage = `Hiển thị ${productCount > 0 ? productCount : itemsCount} sản phẩm`;
-                }                console.log(`TK_07: chọn "Tất cả danh mục" - ${resultMessage} - PASS`);                // Chụp screenshot kết quả test
-                await this.takeTestResultScreenshot('TK_07', 'PASSED');
-
-                // Record successful test result
-                excelReporter.addTestResult({
-                    testName: testName,
-                    description: 'Chọn lại "Tất cả danh mục" để hiển thị toàn bộ sản phẩm',
-                    status: 'PASSED',
-                    inputData: 'Chuyển từ "Quần" → "Tất cả danh mục"',
-                    expectedResult: 'Hiển thị tất cả sản phẩm',
-                    actualResult: resultMessage
-                });            } else {                console.log(`TK_07: chọn "Tất cả danh mục" - Không hiển thị sản phẩm - FAIL`);
-
-                // Chụp screenshot kết quả test
-                await this.takeTestResultScreenshot('TK_07', 'FAILED');
-
-                // Record failed test result
-                excelReporter.addTestResult({
-                    testName: testName,
-                    description: 'Chọn lại "Tất cả danh mục" để hiển thị toàn bộ sản phẩm',
-                    status: 'FAILED',
-                    inputData: 'Chuyển từ "Quần" → "Tất cả danh mục"',
-                    expectedResult: 'Hiển thị tất cả sản phẩm',
-                    actualResult: `Không hiển thị sản phẩm (${itemsCount} items, visible: ${isResultsVisible})`
-                });
-            }
-
-        } catch (error) {            console.log(`TK_07: gặp lỗi trong quá trình test - FAIL`);
-
-            // Chụp screenshot kết quả test
-            await this.takeTestResultScreenshot('TK_07', 'FAILED');
-
-            excelReporter.addTestResult({
-                testName: testName,
-                description: 'Chọn lại "Tất cả danh mục" để hiển thị toàn bộ sản phẩm',
-                status: 'FAILED',
-                inputData: 'Chuyển từ "Quần" → "Tất cả danh mục"',
-                expectedResult: 'Hiển thị sản phẩm từ tất cả danh mục',
-                actualResult: `Lỗi trong quá trình test: ${error.message}`
-            });
-        }
     }
+
     // TK_07: Nhập giá tối thiểu lớn hơn giá tối đa → Kiểm tra hiển thị thông báo lỗi validation
     async TK_07_InvalidPriceRange() {
-        const testName = searchObjects.testData.testNames.TK_07;
+        const testName = TEST_CASE_NAMES.TK_07;
+
 
         try {
             // Step 1: Navigate to search page
@@ -990,7 +876,7 @@ class SearchActions {
 
                 if (filterApplied && productCount > 0) {
                     actualResult += `, vẫn tìm được ${productCount} sản phẩm`;
-                }                excelReporter.addTestResult({
+                } excelReporter.addTestResult({
                     testName: testName,
                     description: 'Kiểm tra validation khoảng giá không hợp lệ (min > max)',
                     status: 'FAILED',
@@ -1001,8 +887,9 @@ class SearchActions {
                 await this.takeTestResultScreenshot('TK_07', 'FAILED');
             }
 
-        } catch (error) {            console.log(`TK_07: gặp lỗi trong quá trình test - ERROR: ${error.message}`); 
-            
+        } catch (error) {
+            console.log(`TK_07: gặp lỗi trong quá trình test - ERROR: ${error.message}`);
+
             excelReporter.addTestResult({
                 testName: testName,
                 description: 'Kiểm tra validation khoảng giá không hợp lệ (min > max)',
@@ -1013,9 +900,11 @@ class SearchActions {
             });            // Chụp ảnh kết quả ERROR
             await this.takeTestResultScreenshot('TK_07', 'FAILED');
         }
-    }    // TK_08: Nhập chữ vào ô giá → Set ô giá về 0 (nó tự động làm rỗng giá trị của ô nếu nhập chữ)
+    }
+
+    // TK_08: Nhập chữ vào ô giá → Set ô giá về 0 (nó tự động làm rỗng giá trị của ô nếu nhập chữ)
     async TK_08_InvalidTextInPriceInput() {
-        const testName = searchObjects.testData.testNames.TK_08;
+        const testName = TEST_CASE_NAMES.TK_08;
 
         try {
             // Step 1: Navigate to search page
@@ -1031,7 +920,7 @@ class SearchActions {
                 throw new Error('Price inputs not visible');
             }            // Step 4: Enter text instead of numbers using test data
             const testText = searchObjects.testData.priceRanges.textInput;
-            console.log(`TK_08: Nhập text "${testText}" vào ô giá tối thiểu`);            await this.safeSetValue(priceMinInput, testText);
+            console.log(`TK_08: Nhập text "${testText}" vào ô giá tối thiểu`); await this.safeSetValue(priceMinInput, testText);
             await browser.pause(searchObjects.waitTimes.defaultWait); // Wait for any validation or auto-clearing
 
             // Step 5: Check the value after entering text
@@ -1051,7 +940,7 @@ class SearchActions {
             const isMinInputCleared = !minInputValue || minInputValue === '0' || minInputValue.trim() === '';
             const isMaxInputCleared = !maxInputValue || maxInputValue === '0' || maxInputValue.trim() === '';
 
-            const testPassed = isMinInputCleared && isMaxInputCleared;            if (testPassed) {
+            const testPassed = isMinInputCleared && isMaxInputCleared; if (testPassed) {
                 console.log(`TK_08: Nhập text vào ô giá - Hệ thống tự động xóa/reset về 0 - PASS`);
 
                 excelReporter.addTestResult({
@@ -1065,7 +954,7 @@ class SearchActions {
                 await this.takeTestResultScreenshot('TK_08', 'PASSED');
 
             } else {
-                console.log(`TK_08: Nhập text vào ô giá - Hệ thống không xử lý đúng - FAIL`);                excelReporter.addTestResult({
+                console.log(`TK_08: Nhập text vào ô giá - Hệ thống không xử lý đúng - FAIL`); excelReporter.addTestResult({
                     testName: testName,
                     description: 'Kiểm tra xử lý input text trong ô giá',
                     status: 'FAILED',
@@ -1077,7 +966,7 @@ class SearchActions {
             }
 
         } catch (error) {
-            console.log(`TK_08: gặp lỗi trong quá trình test - ERROR: ${error.message}`);            excelReporter.addTestResult({
+            console.log(`TK_08: gặp lỗi trong quá trình test - ERROR: ${error.message}`); excelReporter.addTestResult({
                 testName: testName,
                 description: 'Kiểm tra xử lý input text trong ô giá',
                 status: 'ERROR',
@@ -1090,7 +979,8 @@ class SearchActions {
     }
     // TK_09: Sắp xếp theo giá tăng dần → Sản phẩm hiển thị từ giá thấp đến cao
     async TK_09_SortByPriceAscending() {
-        const testName = searchObjects.testData.testNames.TK_09;
+
+        const testName = TEST_CASE_NAMES.TK_09;
 
         try {
             // Step 1: Navigate to search page
@@ -1186,7 +1076,7 @@ class SearchActions {
             }
 
             console.log(`TK_09: Kiểm tra ${prices.length} sản phẩm đầu tiên`);
-            console.log(`TK_09: Giá sản phẩm: ${priceDetails.join(' → ')}`);            if (isAscending && prices.length >= 2) {
+            console.log(`TK_09: Giá sản phẩm: ${priceDetails.join(' → ')}`); if (isAscending && prices.length >= 2) {
                 console.log(`TK_09: Sắp xếp theo giá tăng dần - Đúng thứ tự - PASS`);
 
                 excelReporter.addTestResult({
@@ -1200,7 +1090,7 @@ class SearchActions {
                 await this.takeTestResultScreenshot('TK_09', 'PASSED');
 
             } else {
-                console.log(`TK_09: Sắp xếp theo giá tăng dần - Không đúng thứ tự - FAIL`);                excelReporter.addTestResult({
+                console.log(`TK_09: Sắp xếp theo giá tăng dần - Không đúng thứ tự - FAIL`); excelReporter.addTestResult({
                     testName: testName,
                     description: 'Sắp xếp sản phẩm theo giá từ thấp đến cao',
                     status: 'FAILED',
@@ -1212,7 +1102,7 @@ class SearchActions {
             }
 
         } catch (error) {
-            console.log(`TK_09: gặp lỗi trong quá trình test - ERROR: ${error.message}`);            excelReporter.addTestResult({
+            console.log(`TK_09: gặp lỗi trong quá trình test - ERROR: ${error.message}`); excelReporter.addTestResult({
                 testName: testName,
                 description: 'Sắp xếp sản phẩm theo giá từ thấp đến cao',
                 status: 'ERROR',
@@ -1225,7 +1115,7 @@ class SearchActions {
     }
     // TK_10: Sắp xếp theo giá giảm dần → Sản phẩm hiển thị từ giá cao đến thấp
     async TK_10_SortByPriceDescending() {
-        const testName = searchObjects.testData.testNames.TK_10;
+        const testName = TEST_CASE_NAMES.TK_10;
 
         try {
             // Step 1: Navigate to search page
@@ -1323,7 +1213,7 @@ class SearchActions {
             }
 
             console.log(`TK_10: Kiểm tra ${prices.length} sản phẩm đầu tiên`);
-            console.log(`TK_10: Giá sản phẩm: ${priceDetails.join(' → ')}`);            if (isDescending && prices.length >= 2) {
+            console.log(`TK_10: Giá sản phẩm: ${priceDetails.join(' → ')}`); if (isDescending && prices.length >= 2) {
                 console.log(`TK_10: Sắp xếp theo giá giảm dần - Đúng thứ tự - PASS`);
 
                 excelReporter.addTestResult({
@@ -1337,7 +1227,7 @@ class SearchActions {
                 await this.takeTestResultScreenshot('TK_10', 'PASSED');
 
             } else {
-                console.log(`TK_10: Sắp xếp theo giá giảm dần - Không đúng thứ tự - FAIL`);                excelReporter.addTestResult({
+                console.log(`TK_10: Sắp xếp theo giá giảm dần - Không đúng thứ tự - FAIL`); excelReporter.addTestResult({
                     testName: testName,
                     description: 'Sắp xếp sản phẩm theo giá từ cao đến thấp',
                     status: 'FAILED',
@@ -1349,7 +1239,7 @@ class SearchActions {
             }
 
         } catch (error) {
-            console.log(`TK_10: gặp lỗi trong quá trình test - ERROR: ${error.message}`);            excelReporter.addTestResult({
+            console.log(`TK_10: gặp lỗi trong quá trình test - ERROR: ${error.message}`); excelReporter.addTestResult({
                 testName: testName,
                 description: 'Sắp xếp sản phẩm theo giá từ cao đến thấp',
                 status: 'ERROR',
@@ -1362,7 +1252,8 @@ class SearchActions {
     }
     // TK_11: Kết hợp tìm kiếm + danh mục + giá → Kết quả chính xác theo tất cả điều kiện
     async TK_11_CombinedSearch() {
-        const testName = searchObjects.testData.testNames.TK_11;
+
+        const testName = TEST_CASE_NAMES.TK_11;
 
         try {
             // Step 1: Navigate to search page
@@ -1485,7 +1376,8 @@ class SearchActions {
                             prices.push(finalPrice);
                             productDetails.push(`${productName}: ${finalPrice.toLocaleString('vi-VN')} VND`);
                         }
-                    }                }
+                    }
+                }
             }
 
             // Check price descending order
@@ -1501,7 +1393,7 @@ class SearchActions {
             console.log(`TK_11: Sắp xếp giá đúng: ${priceOrderCorrect ? 'Có' : 'Không'}`);
 
             // Step 9: Determine test result
-            const testPassed = productCount > 0 && keywordMatches >= Math.min(productCards.length, 2) && priceOrderCorrect;            if (testPassed) {
+            const testPassed = productCount > 0 && keywordMatches >= Math.min(productCards.length, 2) && priceOrderCorrect; if (testPassed) {
                 console.log(`TK_11: Tìm kiếm kết hợp - Kết quả chính xác - PASS`);
 
                 excelReporter.addTestResult({
@@ -1515,7 +1407,7 @@ class SearchActions {
                 await this.takeTestResultScreenshot('TK_11', 'PASSED');
 
             } else {
-                console.log(`TK_11: Tìm kiếm kết hợp - Kết quả không chính xác - FAIL`);                excelReporter.addTestResult({
+                console.log(`TK_11: Tìm kiếm kết hợp - Kết quả không chính xác - FAIL`); excelReporter.addTestResult({
                     testName: testName,
                     description: 'Kết hợp tìm kiếm từ khóa + danh mục + sắp xếp',
                     status: 'FAILED',
@@ -1527,7 +1419,7 @@ class SearchActions {
             }
 
         } catch (error) {
-            console.log(`TK_11: gặp lỗi trong quá trình test - ERROR: ${error.message}`);            excelReporter.addTestResult({
+            console.log(`TK_11: gặp lỗi trong quá trình test - ERROR: ${error.message}`); excelReporter.addTestResult({
                 testName: testName,
                 description: 'Kết hợp tìm kiếm từ khóa + danh mục + sắp xếp',
                 status: 'ERROR',
@@ -1540,7 +1432,8 @@ class SearchActions {
     }
     // TK_12: Nhấn "Xóa Bộ Lọc" sau khi lọc → Trả về trạng thái mặc định, hiển thị toàn bộ sản phẩm
     async TK_12_ClearFilters() {
-        const testName = searchObjects.testData.testNames.TK_12;
+
+        const testName = TEST_CASE_NAMES.TK_12;
 
         try {
             // Step 1: First, apply some filters (use results from TK_11)
@@ -1605,7 +1498,7 @@ class SearchActions {
             const hasMoreProducts = clearedProductCount >= filteredProductCount;
             const hasSignificantIncrease = clearedProductCount > filteredProductCount * 1.5; // At least 50% more products
 
-            const testPassed = isSearchCleared && isCategoryReset && (hasMoreProducts || clearedProductCount > 10);            if (testPassed) {
+            const testPassed = isSearchCleared && isCategoryReset && (hasMoreProducts || clearedProductCount > 10); if (testPassed) {
                 console.log(`TK_12: Xóa bộ lọc - Trả về trạng thái mặc định - PASS`);
 
                 excelReporter.addTestResult({
@@ -1624,7 +1517,7 @@ class SearchActions {
                 let failureReason = '';
                 if (!isSearchCleared) failureReason += 'Từ khóa chưa xóa; ';
                 if (!isCategoryReset) failureReason += 'Danh mục chưa reset; ';
-                if (!hasMoreProducts) failureReason += 'Số sản phẩm không tăng; ';                excelReporter.addTestResult({
+                if (!hasMoreProducts) failureReason += 'Số sản phẩm không tăng; '; excelReporter.addTestResult({
                     testName: testName,
                     description: 'Xóa tất cả bộ lọc và trả về trạng thái mặc định',
                     status: 'FAILED',
@@ -1636,7 +1529,7 @@ class SearchActions {
             }
 
         } catch (error) {
-            console.log(`TK_12: gặp lỗi trong quá trình test - ERROR: ${error.message}`);            excelReporter.addTestResult({
+            console.log(`TK_12: gặp lỗi trong quá trình test - ERROR: ${error.message}`); excelReporter.addTestResult({
                 testName: testName,
                 description: 'Xóa tất cả bộ lọc và trả về trạng thái mặc định',
                 status: 'ERROR',
